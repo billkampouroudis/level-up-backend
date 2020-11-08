@@ -5,7 +5,7 @@ const initDatabase = async () => {
   try {
     loadDb();
     await initModels(sequelize);
-    sequelize.sync();
+    sequelize.sync({ force: true });
   } catch (error) {
     console.log(error);
   }

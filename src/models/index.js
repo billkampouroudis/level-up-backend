@@ -4,25 +4,41 @@
 // const { Store } = require('./Store');
 
 import { Address, initAddress, initAddressAssociations } from './Address';
+import { Order, initOrder, initOrderAssociations } from './Order';
+import {
+  OrderItem,
+  initOrderItem,
+  initOrderItemAssociations
+} from './OrderItem';
+import { Product, initProduct, initProductAssociations } from './Product';
+import { Store, initStore, initStoreAssociations } from './Store';
 import { User, initUser, initUserAssociations } from './User';
-import { Favorite, initFavorite, initFavoriteAssociations } from './Favorite';
 
 export let models;
 const initModels = async (sequelize) => {
   // Initiate models
   await initAddress(sequelize);
+  await initOrder(sequelize);
+  await initOrderItem(sequelize);
+  await initProduct(sequelize);
+  await initStore(sequelize);
   await initUser(sequelize);
-  await initFavorite(sequelize);
 
   // Initiate associations between models
   await initAddressAssociations();
+  await initOrderAssociations();
+  await initOrderItemAssociations();
+  await initProductAssociations();
+  await initStoreAssociations();
   await initUserAssociations();
-  await initFavoriteAssociations();
 
   models = {
     Address,
-    User,
-    Favorite
+    Order,
+    OrderItem,
+    Product,
+    Store,
+    User
   };
 };
 

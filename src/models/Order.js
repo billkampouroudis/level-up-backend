@@ -3,7 +3,7 @@ import { dataTypes } from '../config/sequelize';
 const { INTEGER } = dataTypes;
 
 export let Order;
-export const initAddress = async (sequelize) => {
+export const initOrder = async (sequelize) => {
   Order = sequelize.define('orders', {
     id: {
       type: INTEGER.UNSIGNED,
@@ -20,6 +20,6 @@ export const initAddress = async (sequelize) => {
   });
 };
 
-export const initOrderAssociations = () => {
+export const initOrderAssociations = async () => {
   // Order.belongsToMany(Order, { through: 'address_user' });
 };

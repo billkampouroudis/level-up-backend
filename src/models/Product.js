@@ -23,18 +23,18 @@ export const initProduct = async (sequelize) => {
       type: DECIMAL,
       allowNull: false
     },
-    reducedPrice: {
+    reduced_price: {
       type: DECIMAL
     },
-    discountLevel: {
-      type: TINYINT
+    discount_level: {
+      type: TINYINT.UNSIGNED
     },
     sizes: {
       type: STRING(10),
       allowNull: false
     },
     image: {
-      type: String(255),
+      type: STRING(255),
       allowNull: false
     },
 
@@ -45,6 +45,6 @@ export const initProduct = async (sequelize) => {
   });
 };
 
-export const initProductAssociations = () => {
+export const initProductAssociations = async () => {
   // Order.belongsToMany(Order, { through: 'address_user' });
 };

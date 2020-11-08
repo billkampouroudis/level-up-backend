@@ -45,6 +45,6 @@ export const initAddress = async (sequelize) => {
   );
 };
 
-export const initAddressAssociations = () => {
+export const initAddressAssociations = async () => {
   Address.belongsToMany(User, { through: 'address_user' });
 };
