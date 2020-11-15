@@ -12,8 +12,8 @@ const {
 export let sequelize;
 export const loadDb = () => {
   sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
-    dialect: DB_DIALECT,
-    host: DB_HOST,
+    dialect: DB_DIALECT || 'mysql',
+    host: DB_HOST || 'localhost',
     port: DB_PORT || 3306
   });
 };

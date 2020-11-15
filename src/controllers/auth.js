@@ -1,4 +1,4 @@
-import { STATUS } from '../constants/statusCodes';
+import STATUS from '../constants/statusCodes';
 import { successResponse, errorResponse } from '../utils/response';
 import {
   BadRequestError,
@@ -7,7 +7,7 @@ import {
 } from '../constants/errors';
 import { models } from '../models';
 import { sign } from 'jsonwebtoken';
-import { create } from '../controllers/users';
+// import { create } from '../controllers/users';
 
 export async function login(req, res) {
   try {
@@ -55,17 +55,19 @@ export async function login(req, res) {
 }
 
 export async function register(req, res) {
-  try {
-    const createUserResponse = await create(req, res);
+  // try {
+  //   const createUserResponse = await create(req, res);
 
-    if (createUserResponse.error) {
-      return errorResponse(createUserResponse.error, res);
-    }
+  //   if (createUserResponse.error) {
+  //     return errorResponse(createUserResponse.error, res);
+  //   }
 
-    return await login(req, res);
-  } catch (error) {
-    console.log('ERROR', error);
+  //   return await login(req, res);
+  // } catch (error) {
+  //   console.log('ERROR', error);
 
-    return errorResponse(error, res);
-  }
+  //   return errorResponse(error, res);
+  // }
+
+  return errorResponse(null, res);
 }

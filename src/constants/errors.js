@@ -1,4 +1,4 @@
-import { STATUS } from '../constants/statusCodes';
+import STATUS from '../constants/statusCodes';
 
 export class GenericError extends Error {
   constructor(message, status, info) {

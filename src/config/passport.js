@@ -5,10 +5,12 @@ const ExtractJWT = ExtractJwt;
 
 let options = {};
 options.jwtFromRequest = ExtractJWT.fromAuthHeaderAsBearerToken();
-options.secretOrKey = process.env.JWT_SECRET;
+options.secretOrKey = process.env.JWT_SECRET || 'secret_key';
 
-passport.use(
+const initPassport = () => passport.use(
   new JWTStrategy(options, function (jwtPayload, done) {
     return done(null, jwtPayload);
   })
 );
+
+export default initPassport;

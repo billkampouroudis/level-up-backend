@@ -1,5 +1,5 @@
 import { dataTypes } from '../config/sequelize';
-import { hashSync, compareSync } from 'bcrypt';
+import { hashSync, compareSync } from 'bcrypt-nodejs'
 import { Address } from './Address';
 
 const { STRING, INTEGER, TINYINT } = dataTypes;
