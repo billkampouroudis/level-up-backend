@@ -1,25 +1,21 @@
 import { dataTypes } from '../config/sequelize';
+import { User } from './User';
 
 const { INTEGER } = dataTypes;
 
 export let Order;
 export const initOrder = async (sequelize) => {
-  Order = sequelize.define('orders', {
+  Order = sequelize.define('order', {
     id: {
       type: INTEGER.UNSIGNED,
       allowNull: false,
       unique: true,
       primaryKey: true,
       autoIncrement: true
-    },
-
-    user_id: {
-      type: INTEGER.UNSIGNED,
-      allowNull: false
     }
   });
 };
 
 export const initOrderAssociations = async () => {
-  // Order.belongsToMany(Order, { through: 'address_user' });
+  Order.belongsTo(User);
 };

@@ -1,13 +1,16 @@
 import { dataTypes } from '../config/sequelize';
-import { hashSync, compareSync } from 'bcrypt-nodejs'
+import { hashSync, compareSync } from 'bcrypt-nodejs';
 import { Address } from './Address';
+import { Store } from './Store';
+import { Order } from './Order';
+import { StoreUser } from './StoreUser';
 
 const { STRING, INTEGER, TINYINT } = dataTypes;
 
 export let User;
 export const initUser = async (sequelize) => {
   User = sequelize.define(
-    'users',
+    'user',
     {
       id: {
         type: INTEGER.UNSIGNED,
@@ -16,11 +19,11 @@ export const initUser = async (sequelize) => {
         primaryKey: true,
         autoIncrement: true
       },
-      first_name: {
+      firstName: {
         type: STRING(45),
         allowNull: false
       },
-      last_name: {
+      lastName: {
         type: STRING(45),
         allowNull: false
       },
@@ -40,10 +43,10 @@ export const initUser = async (sequelize) => {
           isEmail: true
         }
       },
-      mobile_number_code: {
+      mobileNumber_code: {
         type: STRING(3)
       },
-      mobile_number: {
+      mobileNumber: {
         type: STRING(100),
         validate: {
           isNumeric: true
@@ -52,10 +55,6 @@ export const initUser = async (sequelize) => {
       password: {
         type: STRING(60),
         allowNull: false
-      },
-
-      addressId: {
-        type: INTEGER.UNSIGNED
       }
     },
     {
@@ -74,4 +73,7 @@ export const initUser = async (sequelize) => {
 
 export const initUserAssociations = async () => {
   User.belongsToMany(Address, { through: 'address_user' });
+  User.belongsToMany(Store, { through: StoreUser });
+
+  User.hasMany(Order);
 };

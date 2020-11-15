@@ -1,11 +1,33 @@
 import { sequelize, loadDb } from './sequelize';
-import initModels from '../models/index';
+import initModels, { models } from '../models/index';
+import fs from 'fs';
+import path from 'path';
+import sequelizeFixtures from 'sequelize-fixtures';
 
 const initDatabase = async () => {
   try {
     loadDb();
     await initModels(sequelize);
-    sequelize.sync({ force: true });
+
+    if (process.env.NODE_ENV === 'development') {
+      await sequelize.sync({ force: true });
+
+      // const fixturesPath = '../models/fixtures';
+      // const directoryPath = path.join(__dirname, fixturesPath);
+
+      // fs.readdir(directoryPath, function (err, files) {
+      //   if (err) {
+      //     throw err;
+      //   }
+
+      //   files.forEach(async function (fileName) {
+      //     await sequelizeFixtures.loadFile(
+      //       `${fixturesPath}/${fileName}`,
+      //       models
+      //     );
+      //   });
+      // });
+    }
   } catch (error) {
     console.log(error);
   }

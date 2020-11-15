@@ -1,10 +1,11 @@
 import { dataTypes } from '../config/sequelize';
+import { Store } from './Store';
 
 const { INTEGER, STRING, DECIMAL, TINYINT } = dataTypes;
 
 export let Product;
 export const initProduct = async (sequelize) => {
-  Product = sequelize.define('products', {
+  Product = sequelize.define('product', {
     id: {
       type: INTEGER.UNSIGNED,
       allowNull: false,
@@ -19,14 +20,14 @@ export const initProduct = async (sequelize) => {
     description: {
       type: STRING(255)
     },
-    original_price: {
+    originalPrice: {
       type: DECIMAL,
       allowNull: false
     },
-    reduced_price: {
+    reducedPrice: {
       type: DECIMAL
     },
-    discount_level: {
+    discountLevel: {
       type: TINYINT.UNSIGNED
     },
     sizes: {
@@ -36,15 +37,10 @@ export const initProduct = async (sequelize) => {
     image: {
       type: STRING(255),
       allowNull: false
-    },
-
-    store_id: {
-      type: INTEGER.UNSIGNED,
-      allowNull: false
     }
   });
 };
 
 export const initProductAssociations = async () => {
-  // Order.belongsToMany(Order, { through: 'address_user' });
+  Product.belongsTo(Store);
 };

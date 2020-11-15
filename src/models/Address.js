@@ -1,12 +1,11 @@
 import { dataTypes } from '../config/sequelize';
-import { User } from './User';
 
 const { STRING, TINYINT, INTEGER, SMALLINT } = dataTypes;
 
 export let Address;
 export const initAddress = async (sequelize) => {
   Address = sequelize.define(
-    'addresses',
+    'address',
     {
       id: {
         type: INTEGER.UNSIGNED,
@@ -23,7 +22,7 @@ export const initAddress = async (sequelize) => {
         type: SMALLINT.UNSIGNED,
         allowNull: false
       },
-      zip_code: {
+      zipCode: {
         type: STRING(20),
         allowNull: false
       },
@@ -45,6 +44,4 @@ export const initAddress = async (sequelize) => {
   );
 };
 
-export const initAddressAssociations = async () => {
-  Address.belongsToMany(User, { through: 'address_user' });
-};
+export const initAddressAssociations = async () => {};

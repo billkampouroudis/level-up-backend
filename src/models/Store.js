@@ -1,4 +1,7 @@
 import { dataTypes } from '../config/sequelize';
+import { StoreUser } from './StoreUser';
+import { User } from './User';
+import { Address } from './Address';
 
 const { INTEGER, STRING } = dataTypes;
 
@@ -11,29 +14,22 @@ export const initStore = async (sequelize) => {
       primaryKey: true,
       autoIncrement: true
     },
-    brand_name: {
+    brandName: {
       type: STRING(45),
       allowNull: false
     },
-    contact_phone: {
+    contactPhone: {
       type: STRING(20)
     },
-    contact_email: {
+    contactEmail: {
       type: STRING(100),
       allowNull: false,
       unique: true
-    },
-
-    addressId: {
-      type: INTEGER.UNSIGNED
-    },
-    admin_id: {
-      type: INTEGER.UNSIGNED,
-      allowNull: false
     }
   });
 };
 
 export const initStoreAssociations = () => {
-  // Order.belongsToMany(Order, { through: 'address_user' });
+  Store.belongsToMany(User, { through: StoreUser });
+  Store.belongsToMany(Address, { through: 'address_store' });
 };
