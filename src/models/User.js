@@ -1,5 +1,5 @@
 import { dataTypes } from '../config/sequelize';
-import { hashSync, compareSync } from 'bcrypt-nodejs';
+import { hashSync, compareSync } from 'bcrypt';
 import { Address } from './Address';
 import { Store } from './Store';
 import { Order } from './Order';
@@ -32,7 +32,7 @@ export const initUser = async (sequelize) => {
         defaultValue: 1
       },
       xp: {
-        type: TINYINT.UNSIGNED,
+        type: INTEGER.UNSIGNED,
         defaultValue: 0
       },
       email: {

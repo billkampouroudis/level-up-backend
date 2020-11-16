@@ -1,0 +1,11 @@
+{
+  "model": "User",
+  "data": {
+    "firstName": "Bill",
+    "lastName": "Kampouroudis",
+    "level": 1,
+    "xp": 300,
+    "email": "v.kampouroudis@gmail.com",
+    "password": "123456789"
+  }
+}

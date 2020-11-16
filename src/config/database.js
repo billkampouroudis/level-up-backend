@@ -12,21 +12,21 @@ const initDatabase = async () => {
     if (process.env.NODE_ENV === 'development') {
       await sequelize.sync({ force: true });
 
-      // const fixturesPath = '../models/fixtures';
-      // const directoryPath = path.join(__dirname, fixturesPath);
+      const fixturesPath = '../models/fixtures';
+      const directoryPath = path.join(__dirname, fixturesPath);
 
-      // fs.readdir(directoryPath, function (err, files) {
-      //   if (err) {
-      //     throw err;
-      //   }
+      fs.readdir(directoryPath, function (err, files) {
+        if (err) {
+          throw err;
+        }
 
-      //   files.forEach(async function (fileName) {
-      //     await sequelizeFixtures.loadFile(
-      //       `${fixturesPath}/${fileName}`,
-      //       models
-      //     );
-      //   });
-      // });
+        files.forEach(async function (fileName) {
+          await sequelizeFixtures.loadFile(
+            path.join(directoryPath, fileName),
+            models
+          );
+        });
+      });
     }
   } catch (error) {
     console.log(error);
