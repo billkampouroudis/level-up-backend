@@ -14,18 +14,14 @@ const initDatabase = async () => {
 
       const fixturesPath = '../models/fixtures';
       const directoryPath = path.join(__dirname, fixturesPath);
-
-      fs.readdir(directoryPath, function (err, files) {
+      fs.readdir(directoryPath, async function (err, files) {
         if (err) {
           throw err;
         }
-
-        files.forEach(async function (fileName) {
-          await sequelizeFixtures.loadFile(
-            path.join(directoryPath, fileName),
-            models
-          );
-        });
+        await sequelizeFixtures.loadFile(
+          path.join(directoryPath, files[0]),
+          models
+        );
       });
     }
   } catch (error) {

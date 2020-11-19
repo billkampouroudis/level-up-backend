@@ -6,6 +6,7 @@ import initPassport from './src/config/passport';
 
 // Routes
 import auth from './src/routes/auth';
+import products from './src/routes/products';
 
 const app = express();
 app.use(urlencoded({ extended: true }));
@@ -17,11 +18,14 @@ if (process.env.NODE_ENV === 'development') {
   app.use(cors());
 }
 
+app.use(express.static('public'));
+
 (async () => {
   await initDatabase();
 
   // API Routes
   app.use('/api/auth', auth);
+  app.use('/api/products', products);
 
   const port = process.env.PORT || 8000;
   app.listen(port, () => {

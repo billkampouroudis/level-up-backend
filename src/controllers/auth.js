@@ -7,25 +7,23 @@ import {
 } from '../constants/errors';
 import { models } from '../models';
 import { sign } from 'jsonwebtoken';
-// import { create } from '../controllers/users';
+import { createUser } from '../controllers/users';
 
 export async function login(req, res) {
   try {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    if (!username || !password) {
+    if (!email || !password) {
       throw new BadRequestError();
     }
 
-    let user = await models.User.findOne({ where: { username } });
+    let user = await models.User.findOne({ where: { email } });
 
     if (!user) {
       throw new BadRequestError();
     }
 
-    let validPassword = user.password === password;
-
-    if (!validPassword) {
+    if (!models.User.validPassword(password)) {
       throw new UnauthorizedError();
     }
 
@@ -55,19 +53,16 @@ export async function login(req, res) {
 }
 
 export async function register(req, res) {
-  // try {
-  //   const createUserResponse = await create(req, res);
+  try {
+    const createUserResponse = await createUser(req, res);
 
-  //   if (createUserResponse.error) {
-  //     return errorResponse(createUserResponse.error, res);
-  //   }
+    if (createUserResponse.error) {
+      return errorResponse(createUserResponse.error, res);
+    }
 
-  //   return await login(req, res);
-  // } catch (error) {
-  //   console.log('ERROR', error);
-
-  //   return errorResponse(error, res);
-  // }
-
-  return errorResponse(null, res);
+    return await login(req, res);
+  } catch (error) {
+    console.log('ERROR', error);
+    return errorResponse(error, res);
+  }
 }
