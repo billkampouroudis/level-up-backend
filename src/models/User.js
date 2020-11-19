@@ -38,23 +38,25 @@ export const initUser = async (sequelize) => {
       email: {
         type: STRING(100),
         allowNull: false,
-        unique: true,
-        validate: {
-          isEmail: true
-        }
+        unique: true
       },
-      mobileNumber_code: {
+      mobileNumberCode: {
         type: STRING(3)
       },
       mobileNumber: {
-        type: STRING(100),
-        validate: {
-          isNumeric: true
-        }
+        type: STRING(100)
       },
       password: {
         type: STRING(60),
         allowNull: false
+      },
+      role: {
+        type: STRING(20),
+        allowNull: false,
+        defaultValue: 'client'
+      },
+      avatar: {
+        type: STRING()
       }
     },
     {

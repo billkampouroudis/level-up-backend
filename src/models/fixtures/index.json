@@ -1,0 +1,45 @@
+[
+  {
+    "model": "User",
+    "data": {
+      "id": 1,
+      "firstName": "Bill",
+      "lastName": "Kampouroudis",
+      "level": 1,
+      "xp": 300,
+      "email": "v.kampouroudis@gmail.com",
+      "password": "123456789"
+    }
+  },
+
+  {
+    "model": "Store",
+    "data": {
+      "id": 1,
+      "brandName": "My Amazing Store",
+      "contactPhone": "6945901783",
+      "contactEmail": "v.kampouroudis@gmail.com",
+      "users": [
+        {
+          "id": 1,
+          "_through": {
+            "userRole": "admin"
+          }
+        }
+      ]
+    }
+  },
+
+  {
+    "model": "Product",
+    "data": {
+      "id": 1,
+      "name": "Adidas Trefoil Crew Adicolor CW1235",
+      "description": "Το φούτερ Adidas Trefoil Crew Adicolor είναι κατασκευασμένο από απαλό, βαμβακερό ύφασμα για άνεση μέσα στην μέρα. Κύριο γνώρισμά του, το γνωστό λογότυπο Trefoil για ένα ρετρό και αθλητικό στυλ.",
+      "originalPrice": "29.99",
+      "sizes": "S M L",
+      "image": "8706142086587256733799432.jpeg",
+      "store": 1
+    }
+  }
+]

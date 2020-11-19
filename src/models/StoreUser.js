@@ -1,6 +1,6 @@
 import { dataTypes } from '../config/sequelize';
-import { Store } from './Store';
-import { User } from './User';
+// import { Store } from './Store';
+// import { User } from './User';
 
 const { INTEGER, STRING } = dataTypes;
 
@@ -14,13 +14,13 @@ export const initStoreUser = async (sequelize) => {
       autoIncrement: true
     },
     userRole: {
-      type: STRING,
+      type: STRING(10),
       allowNull: false
     }
   });
 };
 
 export const initStoreUserAssociations = () => {
-  StoreUser.belongsTo(Store);
-  StoreUser.belongsTo(User);
+  // StoreUser.belongsTo(Store);
+  // StoreUser.belongsTo(User);
 };

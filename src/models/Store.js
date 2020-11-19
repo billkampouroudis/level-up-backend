@@ -2,6 +2,7 @@ import { dataTypes } from '../config/sequelize';
 import { StoreUser } from './StoreUser';
 import { User } from './User';
 import { Address } from './Address';
+import { Product } from './Product';
 
 const { INTEGER, STRING } = dataTypes;
 
@@ -32,4 +33,5 @@ export const initStore = async (sequelize) => {
 export const initStoreAssociations = () => {
   Store.belongsToMany(User, { through: StoreUser });
   Store.belongsToMany(Address, { through: 'address_store' });
+  Store.hasMany(Product);
 };

@@ -34,9 +34,11 @@ export const initProduct = async (sequelize) => {
       type: STRING(10),
       allowNull: false
     },
+    stars: {
+      type: TINYINT.UNSIGNED
+    },
     image: {
-      type: STRING(255),
-      allowNull: false
+      type: STRING(255)
     }
   });
 };
