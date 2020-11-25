@@ -23,7 +23,7 @@ export const createSchema = Joi.object({
 });
 
 export const getSchema = Joi.object({
-  productId: Joi.string().trim().required()
+  productId: Joi.number().required()
 });
 
 export const partialUpdateSchema = Joi.object({

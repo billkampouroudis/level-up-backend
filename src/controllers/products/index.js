@@ -48,11 +48,18 @@ export async function createProduct(req, res) {
 export async function getProduct(req, res) {
   try {
     const { productId } = req.params;
-    const { Product } = models;
+    const { Product, Store } = models;
 
-    await getSchema.validateAsync(productId);
+    await getSchema.validateAsync({ productId: parseInt(productId) });
 
-    let product = await Product.findOne({ where: { id: productId } });
+    let product = await Product.scope('withoutId').findOne({
+      include: [
+        {
+          model: Store,
+          as: 'store'
+        }
+      ]
+    });
 
     if (!product) {
       throw new NotFoundError();
