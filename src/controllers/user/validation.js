@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import rules from '../../constants/validation';
 
-const schema = Joi.object({
+export const createSchema = Joi.object({
   fistName: Joi.string()
     .trim()
     .pattern(rules.nameRegex)
@@ -35,5 +35,3 @@ const schema = Joi.object({
     size: Joi.number().max(rules.defaultMaxFileSize)
   }).optional()
 });
-
-module.exports = schema;

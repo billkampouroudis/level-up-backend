@@ -1,43 +1,46 @@
 import Joi from 'joi';
 import rules from '../../constants/validation';
+import { createSchema as createUserSchema } from '../user/validation';
 
 export const createSchema = Joi.object({
-  name: Joi.string().trim().required(),
+  brandName: Joi.string().trim().required(),
 
-  description: Joi.string().trim(),
+  contactPhone: Joi.string().trim().pattern(rules.phoneRegex).required(),
 
-  originalPrice: Joi.number().required(),
+  contactEmail: Joi.string()
+    .trim()
+    .pattern(rules.emailRegex)
+    .max(rules.defaultMaxLength)
+    .required(),
 
-  discountLevel: Joi.number(),
-
-  sizes: Joi.string().trim().required(),
-
-  image: Joi.object({
+  avatar: Joi.object({
     fieldname: Joi.string(),
     originalname: Joi.string(),
     encoding: Joi.string(),
     mimetype: Joi.string().valid(...rules.defaultFileTypes),
     buffer: Joi.any(),
     size: Joi.number().max(rules.defaultMaxFileSize)
-  }).optional()
+  }).optional(),
+
+  user: createUserSchema
 });
 
 export const getSchema = Joi.object({
-  productId: Joi.number().required()
+  storeId: Joi.number().required()
 });
 
 export const partialUpdateSchema = Joi.object({
-  name: Joi.string().trim().optional(),
+  brandName: Joi.string().trim().optional(),
 
-  description: Joi.string().trim().optional(),
+  contactPhone: Joi.string().trim().pattern(rules.phoneRegex).optional(),
 
-  originalPrice: Joi.number().optional(),
+  contactEmail: Joi.string()
+    .trim()
+    .pattern(rules.emailRegex)
+    .max(rules.defaultMaxLength)
+    .optional(),
 
-  discountLevel: Joi.number().optional(),
-
-  sizes: Joi.string().trim().optional(),
-
-  image: Joi.object({
+  avatar: Joi.object({
     fieldname: Joi.string(),
     originalname: Joi.string(),
     encoding: Joi.string(),
@@ -48,5 +51,5 @@ export const partialUpdateSchema = Joi.object({
 });
 
 export const deleteSchema = Joi.object({
-  productId: Joi.string().trim().required()
+  storeId: Joi.string().trim().required()
 });

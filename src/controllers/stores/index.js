@@ -13,20 +13,18 @@ import {
   deleteSchema
 } from './validation';
 
-export async function createProduct(req, res) {
+export async function createStore(req, res) {
   try {
-    await createSchema.validateAsync({ ...req.body, image: req.file });
+    await createSchema.validateAsync({ ...req.body, avatar: req.file });
 
-    const { Product } = models;
+    const { Store } = models;
 
-    const storeId = 1; //TODO: take it from the jwt?
-    const product = await Product.create({
+    const store = await Store.create({
       ...req.body,
-      image: req.file,
-      storeId
+      avatar: req.file
     });
 
-    return successResponse(STATUS.HTTP_200_OK, product, res);
+    return successResponse(STATUS.HTTP_200_OK, store, res);
   } catch (error) {
     switch (error.name) {
       case 'SequelizeUniqueConstraintError':
@@ -45,28 +43,97 @@ export async function createProduct(req, res) {
   }
 }
 
-export async function getProduct(req, res) {
+export async function getStore(req, res) {
   try {
-    const { productId } = req.params;
-    const { Product, Store } = models;
+    const { storeId } = req.params;
+    const { Store } = models;
 
-    await getSchema.validateAsync({ productId: parseInt(productId) });
+    await getSchema.validateAsync({ storeId: parseInt(storeId) });
 
-    let product = await Product.scope('withoutId').findOne({
-      include: [
-        {
-          model: Store,
-          as: 'store'
-        }
-      ],
-      where: { id: productId }
-    });
+    let store = await Store.findOne({ where: { id: storeId } });
 
-    if (!product) {
+    if (!store) {
       throw new NotFoundError();
     }
 
-    return successResponse(STATUS.HTTP_200_OK, product, res);
+    return successResponse(STATUS.HTTP_200_OK, store, res);
+  } catch (error) {
+    switch (error.name) {
+      case 'ValidationError':
+        return errorResponse(
+          new BadRequestError(error.details[0].message),
+          res
+        );
+      default:
+        return errorResponse(error, res);
+    }
+  }
+}
+
+export async function listStores(req, res) {
+  try {
+    const { Store } = models;
+
+    let stores = await Store.findAll();
+
+    return successResponse(STATUS.HTTP_200_OK, stores, res);
+  } catch (error) {
+    switch (error.name) {
+      case 'ValidationError':
+        return errorResponse(
+          new BadRequestError(error.details[0].message),
+          res
+        );
+      default:
+        return errorResponse(error, res);
+    }
+  }
+}
+
+export async function partialUpdateStore(req, res) {
+  try {
+    const { Store } = models;
+    const { storeId } = req.params;
+
+    // TODO: Update only if the user is admin of this store
+    await partialUpdateSchema.validateAsync({ ...req.body, storeId });
+
+    let store = await Store.update(
+      { ...req.body },
+      {
+        where: {
+          id: storeId
+        }
+      }
+    );
+
+    return successResponse(STATUS.HTTP_200_OK, store, res);
+  } catch (error) {
+    switch (error.name) {
+      case 'ValidationError':
+        return errorResponse(
+          new BadRequestError(error.details[0].message),
+          res
+        );
+      default:
+        return errorResponse(error, res);
+    }
+  }
+}
+
+export async function removeStore(req, res) {
+  try {
+    const { storeId } = req.params;
+    const { Store } = models;
+
+    await deleteSchema.validateAsync(storeId);
+
+    // TODO: Remove only if the user is admin of this store
+    Store.destroy({
+      where: { id: storeId }
+    });
+
+    return successResponse(STATUS.HTTP_200_OK, {}, res);
   } catch (error) {
     switch (error.name) {
       case 'ValidationError':
@@ -82,75 +149,20 @@ export async function getProduct(req, res) {
 
 export async function listProducts(req, res) {
   try {
+    const { storeId } = req.params;
     const { Product, Store } = models;
 
-    let products = await Product.scope('withoutId').findAll({
+    let stores = await Product.scope('withoutId').findAll({
       include: [
         {
           model: Store,
           as: 'store'
         }
-      ]
+      ],
+      where: { storeId }
     });
 
-    return successResponse(STATUS.HTTP_200_OK, products, res);
-  } catch (error) {
-    switch (error.name) {
-      case 'ValidationError':
-        return errorResponse(
-          new BadRequestError(error.details[0].message),
-          res
-        );
-      default:
-        return errorResponse(error, res);
-    }
-  }
-}
-
-export async function partialUpdateProduct(req, res) {
-  try {
-    const { Product } = models;
-    const { productId } = req.params;
-
-    // TODO: Update only if the user is admin of this product's store
-    await partialUpdateSchema.validateAsync({ ...req.body, productId });
-
-    let product = await Product.update(
-      { ...req.body },
-      {
-        where: {
-          id: productId
-        }
-      }
-    );
-
-    return successResponse(STATUS.HTTP_200_OK, product, res);
-  } catch (error) {
-    switch (error.name) {
-      case 'ValidationError':
-        return errorResponse(
-          new BadRequestError(error.details[0].message),
-          res
-        );
-      default:
-        return errorResponse(error, res);
-    }
-  }
-}
-
-export async function removeProduct(req, res) {
-  try {
-    const { productId } = req.params;
-    const { Product } = models;
-
-    await deleteSchema.validateAsync(productId);
-
-    // TODO: Remove only if the user is admin of this product's store
-    Product.destroy({
-      where: { id: productId }
-    });
-
-    return successResponse(STATUS.HTTP_200_OK, {}, res);
+    return successResponse(STATUS.HTTP_200_OK, stores, res);
   } catch (error) {
     switch (error.name) {
       case 'ValidationError':

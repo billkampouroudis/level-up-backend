@@ -16,24 +16,24 @@ export const initProduct = async (sequelize) => {
         autoIncrement: true
       },
       name: {
-        type: STRING(50),
+        type: STRING(100),
         allowNull: false
       },
       description: {
         type: STRING(255)
       },
       originalPrice: {
-        type: DECIMAL,
+        type: DECIMAL(10, 2),
         allowNull: false
       },
       reducedPrice: {
-        type: DECIMAL
+        type: DECIMAL(10, 2)
       },
       discountLevel: {
         type: TINYINT.UNSIGNED
       },
       sizes: {
-        type: STRING(10),
+        type: STRING(30),
         allowNull: false
       },
       stars: {

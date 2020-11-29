@@ -18,7 +18,24 @@
       "id": 1,
       "brandName": "My Amazing Store",
       "contactPhone": "6945901783",
-      "contactEmail": "v.kampouroudis@gmail.com",
+      "contactEmail": "my-amazing-store@test.test",
+      "users": [
+        {
+          "id": 1,
+          "_through": {
+            "userRole": "admin"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "model": "Store",
+    "data": {
+      "id": 2,
+      "brandName": "My Other Amazing Store",
+      "contactPhone": "2551033464",
+      "contactEmail": "my-other-amazing-store@test.test",
       "users": [
         {
           "id": 1,
@@ -38,8 +55,44 @@
       "description": "Το φούτερ Adidas Trefoil Crew Adicolor είναι κατασκευασμένο από απαλό, βαμβακερό ύφασμα για άνεση μέσα στην μέρα. Κύριο γνώρισμά του, το γνωστό λογότυπο Trefoil για ένα ρετρό και αθλητικό στυλ.",
       "originalPrice": "29.99",
       "sizes": "S M L",
-      "image": "8706142086587256733799432.jpeg",
+      "image": "970652086487252733799432.jpeg",
       "store": 1
+    }
+  },
+  {
+    "model": "Product",
+    "data": {
+      "id": 2,
+      "name": "Quiksilver Παρκά Αδιάβροχο Ferris Καφέ Με Γούνα στην Κουκούλα",
+      "description": "Παρκά QUIKSILVER σε μουσταρδί χρώμα με γούνινη επένδυση. Κουκούλα με κορδόνι και αποσπώμενο γουνάκι. Τσέπες με καπάκι και κουμπί. Τσέπες σε λοξή γραμμή στο στήθος. Ελαστικό τελείωμα και κουμπάκι στις μανσέτες. Κλείσιμο με φερμουάρ και πατιλέτα με κουμπιά.",
+      "originalPrice": "150.00",
+      "sizes": "S M L XL",
+      "image": "8736142086887256733599932.jpeg",
+      "store": 1
+    }
+  },
+  {
+    "model": "Product",
+    "data": {
+      "id": 3,
+      "name": "Adidas Cropped Hoodie",
+      "description": "H cropped γραμμή χαρίζει μοντέρνο look σε αυτό το φούτερ με τις εμβληματικές λεπτομέρειες της Adidas!",
+      "originalPrice": "39.92",
+      "sizes": "XS S M L",
+      "image": "3706142026587256733799432.jpeg",
+      "store": 1
+    }
+  },
+  {
+    "model": "Product",
+    "data": {
+      "id": 4,
+      "name": "Adidas Falcon",
+      "description": "Στυλ που πάει παντού. Χρειάζεσαι παπούτσια για τις δουλειές και τη βόλτα σου; Τα Αdidas Falcon ανταποκρίνονται στις ανάγκες σου με chunky γραμμή και λαχταριστή ροζ απόχρωση.",
+      "originalPrice": "54.37",
+      "sizes": "36 37 38 39 40 41 42",
+      "image": "8706142086587256733799432.jpeg",
+      "store": 2
     }
   }
 ]

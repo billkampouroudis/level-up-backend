@@ -7,6 +7,7 @@ import initPassport from './src/config/passport';
 // Routes
 import auth from './src/routes/auth';
 import products from './src/routes/products';
+import stores from './src/routes/stores';
 
 const app = express();
 app.use(urlencoded({ extended: true }));
@@ -26,6 +27,7 @@ app.use(express.static('public'));
   // API Routes
   app.use('/api/auth', auth);
   app.use('/api/products', products);
+  app.use('/api/stores', stores);
 
   const port = process.env.PORT || 8000;
   app.listen(port, () => {
