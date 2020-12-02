@@ -40,7 +40,13 @@ export const initProduct = async (sequelize) => {
         type: TINYINT.UNSIGNED
       },
       image: {
-        type: STRING(255)
+        type: STRING(255),
+        get() {
+          const rawValue = this.getDataValue('image');
+          return rawValue
+            ? `${process.env.FILE_STORAGE_URL}/images/products/${rawValue}`
+            : null;
+        }
       }
     },
     {
