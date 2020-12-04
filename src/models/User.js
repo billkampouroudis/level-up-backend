@@ -64,6 +64,11 @@ export const initUser = async (sequelize) => {
         beforeCreate: (user) => {
           user.password = hashSync(user.password, 5);
         }
+      },
+      scopes: {
+        auth: {
+          attributes: { exclude: ['password'] }
+        }
       }
     }
   );

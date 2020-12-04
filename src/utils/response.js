@@ -13,3 +13,16 @@ export const errorResponse = (error, res) => {
     error: error || {}
   };
 };
+
+/**
+ * Hides the given fields from the response object
+ * @param {string[]} fieldsToHide
+ * @param {Object} model
+ */
+export const prepareResponse = (fieldsToHide = [], model = {}) => {
+  for (let field of fieldsToHide) {
+    delete model[field];
+  }
+
+  return model;
+};

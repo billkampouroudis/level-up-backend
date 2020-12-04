@@ -2,7 +2,7 @@ import Joi from 'joi';
 import rules from '../../constants/validation';
 
 export const createSchema = Joi.object({
-  fistName: Joi.string()
+  firstName: Joi.string()
     .trim()
     .pattern(rules.nameRegex)
     .max(rules.defaultMaxLength)

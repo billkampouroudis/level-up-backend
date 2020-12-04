@@ -1,13 +1,14 @@
-import STATUS from '../constants/statusCodes';
-import { successResponse, errorResponse } from '../utils/response';
+import STATUS from '../../constants/statusCodes';
+import { successResponse, errorResponse } from '../../utils/response';
 import {
   BadRequestError,
   DuplicateEntryError,
   UnauthorizedError
-} from '../constants/errors';
-import { models } from '../models';
+} from '../../constants/errors';
+import { models } from '../../models';
 import { sign } from 'jsonwebtoken';
-import { createUser } from '../controllers/users';
+import { createUser } from '../user';
+import { authResponse } from '../user/responses';
 
 export async function login(req, res) {
   try {
@@ -17,21 +18,24 @@ export async function login(req, res) {
       throw new BadRequestError();
     }
 
-    let user = await models.User.findOne({ where: { email } });
+    const { User } = models;
+    let user = await User.findOne({ where: { email } });
 
     if (!user) {
       throw new BadRequestError();
     }
 
-    if (!models.User.validPassword(password)) {
+    if (!user.validPassword(password)) {
       throw new UnauthorizedError();
     }
 
     const token = sign(
       {
-        email: user.email
+        user: authResponse(user.toJSON())
       },
+
       process.env.JWT_SECRET,
+
       {
         expiresIn: '365 days'
       }
