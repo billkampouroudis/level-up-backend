@@ -8,30 +8,30 @@ import {
   listProducts
 } from '../controllers/stores';
 
-const auth = Router();
+const stores = Router();
 
-auth.post('/', async (req, res) => {
+stores.post('/', async (req, res) => {
   res.json(await createStore(req, res));
 });
 
-auth.get('/:storeId', async (req, res) => {
+stores.get('/:storeId', async (req, res) => {
   res.json(await getStore(req, res));
 });
 
-auth.get('/', async (req, res) => {
+stores.get('/', async (req, res) => {
   res.json(await listStores(req, res));
 });
 
-auth.get('/:storeId/products', async (req, res) => {
+stores.get('/:storeId/products', async (req, res) => {
   res.json(await listProducts(req, res));
 });
 
-auth.patch('/:storeId', async (req, res) => {
+stores.patch('/:storeId', async (req, res) => {
   res.json(await partialUpdateStore(req, res));
 });
 
-auth.delete('/:storeId', async (req, res) => {
+stores.delete('/:storeId', async (req, res) => {
   res.json(await removeStore(req, res));
 });
 
-export default auth;
+export default stores;

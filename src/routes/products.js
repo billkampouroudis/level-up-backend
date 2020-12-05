@@ -6,27 +6,32 @@ import {
   partialUpdateProduct,
   removeProduct
 } from '../controllers/products';
+import auth from '../middlewares/auth';
 
-const auth = Router();
+const products = Router();
 
-auth.post('/', async (req, res) => {
+products.post('/', async (req, res) => {
   res.json(await createProduct(req, res));
 });
 
-auth.get('/:productId', async (req, res) => {
+products.get('/:productId', async (req, res) => {
   res.json(await getProduct(req, res));
 });
 
-auth.get('/', async (req, res) => {
-  res.json(await listProducts(req, res));
-});
+products.get(
+  '/',
+  (req, res, next) => auth(req, res, next, ['admin', 'client']),
+  async (req, res) => {
+    res.json(await listProducts(req, res));
+  }
+);
 
-auth.patch('/:productId', async (req, res) => {
+products.patch('/:productId', async (req, res) => {
   res.json(await partialUpdateProduct(req, res));
 });
 
-auth.delete('/:productId', async (req, res) => {
+products.delete('/:productId', async (req, res) => {
   res.json(await removeProduct(req, res));
 });
 
-export default auth;
+export default products;
