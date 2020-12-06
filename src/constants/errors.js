@@ -1,17 +1,6 @@
 import STATUS from '../constants/statusCodes';
 
-export class GenericError extends Error {
-  constructor(message, status, info) {
-    super(message || 'Generic Error');
-
-    this.name = this.constructor.name;
-    Error.captureStackTrace(this, this.constructor);
-    this.status = status || STATUS.HTTP_500_INTERNAL_SERVER_ERROR;
-    this.info = info || {};
-  }
-}
-
-export class InternalServerError extends GenericError {
+export class InternalServerError extends Error {
   constructor(info) {
     super('Internal Server Error');
 
@@ -22,7 +11,7 @@ export class InternalServerError extends GenericError {
   }
 }
 
-export class BadRequestError extends GenericError {
+export class BadRequestError extends Error {
   constructor(info) {
     super('Bad Request Error');
 
@@ -33,7 +22,7 @@ export class BadRequestError extends GenericError {
   }
 }
 
-export class NotFoundError extends GenericError {
+export class NotFoundError extends Error {
   constructor(info) {
     super('Not Found Error');
 
@@ -44,9 +33,20 @@ export class NotFoundError extends GenericError {
   }
 }
 
-export class DuplicateEntryError extends GenericError {
+export class ConflictError extends Error {
   constructor(info) {
-    super('Duplicate Entry Error');
+    super('Conflict Error');
+
+    this.name = this.constructor.name;
+    Error.captureStackTrace(this, this.constructor);
+    this.status = STATUS.HTTP_409_UNPROCESSABLE_ENTITY;
+    this.info = info || {};
+  }
+}
+
+export class UnprocessableEntityError extends Error {
+  constructor(info) {
+    super('Unprocessable Entity');
 
     this.name = this.constructor.name;
     Error.captureStackTrace(this, this.constructor);
@@ -55,7 +55,7 @@ export class DuplicateEntryError extends GenericError {
   }
 }
 
-export class UnauthorizedError extends GenericError {
+export class UnauthorizedError extends Error {
   constructor(info) {
     super('Unauthorized');
 
@@ -66,7 +66,7 @@ export class UnauthorizedError extends GenericError {
   }
 }
 
-export class ForbiddenError extends GenericError {
+export class ForbiddenError extends Error {
   constructor(info) {
     super('Forbidden');
 

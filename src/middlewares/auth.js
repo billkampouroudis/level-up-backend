@@ -6,14 +6,15 @@ function auth(req, res, next, permissions = []) {
   // eslint-disable-next-line no-unused-vars
   passport.authenticate('jwt', { session: false }, function (err, user, info) {
     if (user) {
-      if (Array.isArray(permissions) && permissions.length > 0) {
+      if (permissions.length && permissions.length > 0) {
         for (let item of user.stores) {
-          if (permissions.includes(get(() => item.store_user.userRole))) {
+          if (permissions.includes(get.safe(() => item.store_user.userRole))) {
             return next();
           }
         }
-
         return next(new ForbiddenError('No right permissions'));
+      } else {
+        return next();
       }
     }
 

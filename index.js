@@ -9,6 +9,7 @@ import errorHandling from './src/middlewares/errorHandling';
 import auth from './src/routes/auth';
 import products from './src/routes/products';
 import stores from './src/routes/stores';
+import favorites from './src/routes/favorites';
 
 const app = express();
 app.use(urlencoded({ extended: true }));
@@ -29,6 +30,7 @@ app.use(express.static('public'));
   app.use('/api/auth', auth);
   app.use('/api/products', products);
   app.use('/api/stores', stores);
+  app.use('/api/favorites', favorites);
 
   app.use(errorHandling);
 

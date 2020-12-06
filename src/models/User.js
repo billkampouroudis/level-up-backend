@@ -4,6 +4,8 @@ import { Address } from './Address';
 import { Store } from './Store';
 import { Order } from './Order';
 import { StoreUser } from './StoreUser';
+import { Product } from './Product';
+import { FavoriteProduct } from './FavoriteProduct';
 
 const { STRING, INTEGER, TINYINT } = dataTypes;
 
@@ -76,6 +78,10 @@ export const initUser = async (sequelize) => {
 export const initUserAssociations = async () => {
   User.belongsToMany(Address, { through: 'address_user' });
   User.belongsToMany(Store, { through: StoreUser });
+  User.belongsToMany(Product, {
+    as: 'favoriteProducts',
+    through: FavoriteProduct
+  });
 
   User.hasMany(Order);
 };

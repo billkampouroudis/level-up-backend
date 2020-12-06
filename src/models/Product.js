@@ -1,5 +1,7 @@
 import { dataTypes } from '../config/sequelize';
 import { Store } from './Store';
+import { User } from './User';
+import { FavoriteProduct } from './FavoriteProduct';
 
 const { INTEGER, STRING, DECIMAL, TINYINT } = dataTypes;
 
@@ -61,4 +63,5 @@ export const initProduct = async (sequelize) => {
 
 export const initProductAssociations = async () => {
   Product.belongsTo(Store);
+  Product.belongsToMany(User, { through: FavoriteProduct });
 };

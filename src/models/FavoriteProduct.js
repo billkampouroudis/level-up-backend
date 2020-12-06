@@ -1,23 +1,23 @@
 import { dataTypes } from '../config/sequelize';
-import { Product } from './Product';
-import { User } from './User';
 
 const { INTEGER } = dataTypes;
 
 export let FavoriteProduct;
 export const initFavoriteProduct = async (sequelize) => {
-  FavoriteProduct = sequelize.define('FavoriteProduct', {
+  FavoriteProduct = sequelize.define('favorite_products', {
     id: {
       type: INTEGER.UNSIGNED,
       allowNull: false,
-      unique: true,
       primaryKey: true,
       autoIncrement: true
+    },
+    productId: {
+      type: INTEGER.UNSIGNED,
+      allowNull: false
+    },
+    userId: {
+      type: INTEGER.UNSIGNED,
+      allowNull: false
     }
   });
-};
-
-export const initFavoriteProductAssociations = async () => {
-  FavoriteProduct.belongsTo(Product);
-  FavoriteProduct.belongsTo(User);
 };

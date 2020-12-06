@@ -2,7 +2,7 @@ import STATUS from '../../constants/statusCodes';
 import { successResponse, errorResponse } from '../../utils/response';
 import {
   BadRequestError,
-  DuplicateEntryError,
+  UnprocessableEntityError,
   UnauthorizedError
 } from '../../constants/errors';
 import { models } from '../../models';
@@ -47,7 +47,7 @@ export async function login(req, res) {
 
     switch (error.name) {
       case 'SequelizeUniqueConstraintError':
-        return errorResponse(new DuplicateEntryError(), res);
+        return errorResponse(new UnprocessableEntityError(), res);
       case 'Unauthorized':
         return errorResponse(new UnauthorizedError(), res);
       default:

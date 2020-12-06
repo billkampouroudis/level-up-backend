@@ -13,11 +13,7 @@ import {
   initStoreUserAssociations
 } from './StoreUser';
 import { User, initUser, initUserAssociations } from './User';
-import {
-  FavoriteProduct,
-  initFavoriteProduct,
-  initFavoriteProductAssociations
-} from './FavoriteProduct';
+import { FavoriteProduct, initFavoriteProduct } from './FavoriteProduct';
 
 export let models;
 const initModels = async (sequelize) => {
@@ -39,7 +35,6 @@ const initModels = async (sequelize) => {
   await initStoreAssociations();
   await initStoreUserAssociations();
   await initUserAssociations();
-  await initFavoriteProductAssociations();
 
   models = {
     Address,

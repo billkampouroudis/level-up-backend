@@ -2,7 +2,7 @@ import STATUS from '../constants/statusCodes';
 import { successResponse, errorResponse } from '../utils/response';
 import {
   BadRequestError,
-  DuplicateEntryError,
+  UnprocessableEntityError,
   UnauthorizedError,
   NotFoundError
 } from '../constants/errors';
@@ -30,7 +30,7 @@ export async function createUser(req, res) {
     switch (error.name) {
       case 'SequelizeUniqueConstraintError':
         return errorResponse(
-          new DuplicateEntryError(error.errors[0].message),
+          new UnprocessableEntityError(error.errors[0].message),
           res
         );
       default:
