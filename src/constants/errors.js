@@ -65,3 +65,14 @@ export class UnauthorizedError extends GenericError {
     this.info = info || {};
   }
 }
+
+export class ForbiddenError extends GenericError {
+  constructor(info) {
+    super('Forbidden');
+
+    this.name = this.constructor.name;
+    Error.captureStackTrace(this, this.constructor);
+    this.status = STATUS.HTTP_403_FORBIDDEN;
+    this.info = info || {};
+  }
+}

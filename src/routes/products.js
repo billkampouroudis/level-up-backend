@@ -20,7 +20,7 @@ products.get('/:productId', async (req, res) => {
 
 products.get(
   '/',
-  (req, res, next) => auth(req, res, next, ['admin', 'client']),
+  (req, res, next) => auth(req, res, next),
   async (req, res) => {
     res.json(await listProducts(req, res));
   }
