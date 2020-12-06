@@ -3,6 +3,7 @@ import { urlencoded, json } from 'body-parser';
 import cors from 'cors';
 import initDatabase from './src/config/database';
 import initPassport from './src/config/passport';
+import errorHandling from './src/middlewares/errorHandling';
 
 // Routes
 import auth from './src/routes/auth';
@@ -28,6 +29,8 @@ app.use(express.static('public'));
   app.use('/api/auth', auth);
   app.use('/api/products', products);
   app.use('/api/stores', stores);
+
+  app.use(errorHandling);
 
   const port = process.env.PORT || 8000;
   app.listen(port, () => {
