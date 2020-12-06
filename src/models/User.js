@@ -50,11 +50,6 @@ export const initUser = async (sequelize) => {
         type: STRING(60),
         allowNull: false
       },
-      role: {
-        type: STRING(20),
-        allowNull: false,
-        defaultValue: 'client'
-      },
       avatar: {
         type: STRING()
       }

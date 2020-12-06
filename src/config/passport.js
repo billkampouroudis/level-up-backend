@@ -12,8 +12,11 @@ options.secretOrKey = process.env.JWT_SECRET || 'secret_key';
 const initPassport = () =>
   passport.use(
     new JWTStrategy(options, async function (jwtPayload, done) {
-      const { User } = models;
-      const user = await User.findOne({ where: { id: jwtPayload.user.id } });
+      const { User, Store } = models;
+      const user = await User.findOne({
+        where: { id: jwtPayload.user.id },
+        include: Store
+      });
 
       if (user) {
         return done(null, user);

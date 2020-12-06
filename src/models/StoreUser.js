@@ -20,7 +20,4 @@ export const initStoreUser = async (sequelize) => {
   });
 };
 
-export const initStoreUserAssociations = () => {
-  // StoreUser.belongsTo(Store);
-  // StoreUser.belongsTo(User);
-};
+export const initStoreUserAssociations = () => {};
