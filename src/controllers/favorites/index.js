@@ -7,7 +7,7 @@ import {
   InternalServerError
 } from '../../constants/errors';
 import { models } from '../../models';
-import { createSchema, getSchema, deleteSchema } from './validation';
+import { createSchema, deleteSchema } from './validation';
 import jwt_decode from 'jwt-decode';
 
 export async function createFavorite(req, res) {

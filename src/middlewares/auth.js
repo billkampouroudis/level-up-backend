@@ -1,5 +1,5 @@
 import passport from 'passport';
-import { ForbiddenError } from '../constants/errors';
+import { ForbiddenError, UnauthorizedError } from '../constants/errors';
 import get from '../utils/misc/get';
 
 function auth(req, res, next, permissions = []) {
@@ -18,7 +18,7 @@ function auth(req, res, next, permissions = []) {
       }
     }
 
-    return next(new ForbiddenError('Login required'));
+    return next(new UnauthorizedError('Login required'));
   })(req, res, next);
 }
 

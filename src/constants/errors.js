@@ -1,78 +1,99 @@
 import STATUS from '../constants/statusCodes';
 
 export class InternalServerError extends Error {
-  constructor(info) {
-    super('Internal Server Error');
+  constructor(message) {
+    super();
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor);
+    }
 
     this.name = this.constructor.name;
-    Error.captureStackTrace(this, this.constructor);
     this.status = STATUS.HTTP_500_INTERNAL_SERVER_ERROR;
-    this.info = info || {};
+    this.message = message || '';
   }
 }
 
 export class BadRequestError extends Error {
-  constructor(info) {
-    super('Bad Request Error');
+  constructor(message) {
+    super();
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor);
+    }
 
     this.name = this.constructor.name;
-    Error.captureStackTrace(this, this.constructor);
     this.status = STATUS.HTTP_400_BAD_REQUEST;
-    this.info = info || {};
+    this.message = message || '';
   }
 }
 
 export class NotFoundError extends Error {
-  constructor(info) {
-    super('Not Found Error');
+  constructor(message) {
+    super();
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor);
+    }
 
     this.name = this.constructor.name;
-    Error.captureStackTrace(this, this.constructor);
     this.status = STATUS.HTTP_404_NOT_FOUND;
-    this.info = info || {};
+    this.message = message || '';
   }
 }
 
 export class ConflictError extends Error {
-  constructor(info) {
-    super('Conflict Error');
+  constructor(message) {
+    super();
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor);
+    }
 
     this.name = this.constructor.name;
-    Error.captureStackTrace(this, this.constructor);
     this.status = STATUS.HTTP_409_UNPROCESSABLE_ENTITY;
-    this.info = info || {};
+    this.message = message || '';
   }
 }
 
 export class UnprocessableEntityError extends Error {
-  constructor(info) {
-    super('Unprocessable Entity');
+  constructor(message) {
+    super();
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor);
+    }
 
     this.name = this.constructor.name;
-    Error.captureStackTrace(this, this.constructor);
     this.status = STATUS.HTTP_422_UNPROCESSABLE_ENTITY;
-    this.info = info || {};
+    this.message = message || '';
   }
 }
 
 export class UnauthorizedError extends Error {
-  constructor(info) {
-    super('Unauthorized');
+  constructor(message) {
+    super();
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor);
+    }
 
     this.name = this.constructor.name;
-    Error.captureStackTrace(this, this.constructor);
     this.status = STATUS.HTTP_401_UNAUTHORIZED;
-    this.info = info || {};
+    this.message = message || '';
   }
 }
 
 export class ForbiddenError extends Error {
-  constructor(info) {
-    super('Forbidden');
+  constructor(message) {
+    super();
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor);
+    }
 
     this.name = this.constructor.name;
-    Error.captureStackTrace(this, this.constructor);
     this.status = STATUS.HTTP_403_FORBIDDEN;
-    this.info = info || {};
+    this.message = message || '';
   }
 }

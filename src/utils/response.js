@@ -17,7 +17,7 @@ export const errorResponse = (error, res) => {
 /**
  * Hides the given fields from the response object
  * @param {string[]} fieldsToHide
- * @param {Object} model
+ * @param {Object|Object[]} model
  */
 export const prepareResponse = (fieldsToHide = [], model) => {
   if (!model) {

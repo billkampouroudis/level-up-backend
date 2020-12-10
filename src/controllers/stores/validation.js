@@ -1,6 +1,6 @@
 import Joi from 'joi';
 import rules from '../../constants/validation';
-import { createSchema as createUserSchema } from '../user/validation';
+import { createSchema as createUserSchema } from '../users/validation';
 
 export const createSchema = Joi.object({
   brandName: Joi.string().trim().required(),

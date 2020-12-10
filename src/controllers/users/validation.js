@@ -35,3 +35,11 @@ export const createSchema = Joi.object({
     size: Joi.number().max(rules.defaultMaxFileSize)
   }).optional()
 });
+
+export const getSchema = Joi.object({
+  userId: Joi.number().required()
+});
+
+export const deleteSchema = Joi.object({
+  userId: Joi.number().required()
+});

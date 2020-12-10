@@ -3,7 +3,8 @@ import { successResponse, errorResponse } from '../../utils/response';
 import {
   BadRequestError,
   UnprocessableEntityError,
-  NotFoundError
+  NotFoundError,
+  InternalServerError
 } from '../../constants/errors';
 import { models } from '../../models';
 import {
@@ -40,7 +41,7 @@ export async function createProduct(req, res) {
           res
         );
       default:
-        return errorResponse(error, res);
+        return errorResponse(new InternalServerError(), res);
     }
   }
 }
@@ -75,7 +76,7 @@ export async function getProduct(req, res) {
           res
         );
       default:
-        return errorResponse(error, res);
+        return errorResponse(new InternalServerError(), res);
     }
   }
 }
@@ -102,7 +103,7 @@ export async function listProducts(req, res) {
           res
         );
       default:
-        return errorResponse(error, res);
+        return errorResponse(new InternalServerError(), res);
     }
   }
 }
@@ -133,7 +134,7 @@ export async function partialUpdateProduct(req, res) {
           res
         );
       default:
-        return errorResponse(error, res);
+        return errorResponse(new InternalServerError(), res);
     }
   }
 }
@@ -159,7 +160,7 @@ export async function removeProduct(req, res) {
           res
         );
       default:
-        return errorResponse(error, res);
+        return errorResponse(new InternalServerError(), res);
     }
   }
 }
