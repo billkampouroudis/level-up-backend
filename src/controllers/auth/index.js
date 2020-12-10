@@ -7,8 +7,8 @@ import {
 } from '../../constants/errors';
 import { models } from '../../models';
 import { sign } from 'jsonwebtoken';
-import { createUser } from '../user';
-import { authResponse } from '../user/responses';
+import { createUser } from '../users';
+import { authSerializer } from '../users/serializers';
 
 export async function login(req, res) {
   try {
@@ -31,7 +31,7 @@ export async function login(req, res) {
 
     const token = sign(
       {
-        user: authResponse(user.toJSON())
+        user: authSerializer(user.toJSON())
       },
 
       process.env.JWT_SECRET,
@@ -43,8 +43,6 @@ export async function login(req, res) {
 
     return successResponse(STATUS.HTTP_200_OK, { token }, res);
   } catch (error) {
-    console.log('ERROR', error);
-
     switch (error.name) {
       case 'SequelizeUniqueConstraintError':
         return errorResponse(new UnprocessableEntityError(), res);
@@ -66,7 +64,6 @@ export async function register(req, res) {
 
     return await login(req, res);
   } catch (error) {
-    console.log('ERROR', error);
     return errorResponse(error, res);
   }
 }

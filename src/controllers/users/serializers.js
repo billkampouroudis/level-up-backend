@@ -1,6 +1,6 @@
 import { prepareResponse } from '../../utils/response';
 
-export const authResponse = (user) => {
+export const authSerializer = (user) => {
   const fieldsToHide = ['password'];
   return prepareResponse(fieldsToHide, user);
 };

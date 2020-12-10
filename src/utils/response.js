@@ -19,7 +19,26 @@ export const errorResponse = (error, res) => {
  * @param {string[]} fieldsToHide
  * @param {Object} model
  */
-export const prepareResponse = (fieldsToHide = [], model = {}) => {
+export const prepareResponse = (fieldsToHide = [], model) => {
+  if (!model) {
+    return null;
+  }
+
+  let _model = [];
+
+  if (Array.isArray(model)) {
+    for (let item of model) {
+      let _item = item.toJSON();
+
+      for (let field of fieldsToHide) {
+        delete _item[field];
+        _model.push(_item);
+      }
+    }
+
+    return _model;
+  }
+
   for (let field of fieldsToHide) {
     delete model[field];
   }
