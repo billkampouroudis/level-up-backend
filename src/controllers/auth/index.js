@@ -44,7 +44,6 @@ export async function login(req, res) {
 
     return successResponse(STATUS.HTTP_200_OK, { token }, res);
   } catch (error) {
-    console.log(error);
     switch (error.name) {
       case 'SequelizeUniqueConstraintError':
         return errorResponse(new UnprocessableEntityError(), res);
