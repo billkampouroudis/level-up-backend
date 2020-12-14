@@ -13,6 +13,8 @@ import {
   partialUpdateSchema,
   deleteSchema
 } from './validation';
+import get from '../../utils/misc/get';
+import jwt_decode from 'jwt-decode';
 
 export async function createProduct(req, res) {
   try {
@@ -49,11 +51,11 @@ export async function createProduct(req, res) {
 export async function getProduct(req, res) {
   try {
     const { productId } = req.params;
-    const { Product, Store } = models;
+    const { Product, Store, FavoriteProduct } = models;
 
     await getSchema.validateAsync({ productId: parseInt(productId) });
 
-    let product = await Product.scope('withoutId').findOne({
+    const product = await Product.scope('withoutId').findOne({
       include: [
         {
           model: Store,
@@ -67,8 +69,27 @@ export async function getProduct(req, res) {
       throw new NotFoundError();
     }
 
+    const tokenUser = get.safe(
+      () => jwt_decode(req.headers.authorization).user
+    );
+
+    if (tokenUser) {
+      const favorite = await FavoriteProduct.findOne({
+        where: { productId, userId: tokenUser.id }
+      });
+
+      const _product = product.toJSON();
+      if (favorite) {
+        _product.isFavorite = true;
+        return successResponse(STATUS.HTTP_200_OK, _product, res);
+      }
+      _product.isFavorite = false;
+      return successResponse(STATUS.HTTP_200_OK, _product, res);
+    }
+
     return successResponse(STATUS.HTTP_200_OK, product, res);
   } catch (error) {
+    console.log(error);
     switch (error.name) {
       case 'ValidationError':
         return errorResponse(
