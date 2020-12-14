@@ -1,15 +1,14 @@
 const is = {
   falsy: (item) => {
     return (
-      item === 'undefined' ||
+      item === undefined ||
       item === null ||
       item === 0 ||
       item === '' ||
       item === ' ' ||
       item === [] ||
       item === {} ||
-      item === false ||
-      isNaN(item)
+      item === false
     );
   },
   truthy: (item) => {

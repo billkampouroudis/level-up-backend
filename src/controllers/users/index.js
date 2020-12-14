@@ -96,7 +96,7 @@ export async function listUsers(req, res) {
   }
 }
 
-export async function partialUpdateUser(req, res) {
+export async function partialUpdateUser() {
   // try {
   //   const { Product } = models;
   //   const { productId } = req.params;

@@ -9,12 +9,13 @@ import { models } from '../../models';
 import { sign } from 'jsonwebtoken';
 import { createUser } from '../users';
 import { authSerializer } from '../users/serializers';
+import is from '../../utils/misc/is';
 
 export async function login(req, res) {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
+    if (is.falsy(email) || is.falsy(password)) {
       throw new BadRequestError();
     }
 
@@ -43,6 +44,7 @@ export async function login(req, res) {
 
     return successResponse(STATUS.HTTP_200_OK, { token }, res);
   } catch (error) {
+    console.log(error);
     switch (error.name) {
       case 'SequelizeUniqueConstraintError':
         return errorResponse(new UnprocessableEntityError(), res);
