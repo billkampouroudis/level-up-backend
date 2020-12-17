@@ -1,7 +1,8 @@
 import { dataTypes } from '../config/sequelize';
 import { User } from './User';
+import { OrderItem } from './OrderItem';
 
-const { INTEGER } = dataTypes;
+const { INTEGER, STRING } = dataTypes;
 
 export let Order;
 export const initOrder = async (sequelize) => {
@@ -12,10 +13,19 @@ export const initOrder = async (sequelize) => {
       unique: true,
       primaryKey: true,
       autoIncrement: true
+    },
+    status: {
+      type: STRING,
+      allowNull: false,
+      defaultValue: 'in_cart',
+      validate: {
+        isIn: [['in_cart', 'registered', 'done']]
+      }
     }
   });
 };
 
 export const initOrderAssociations = async () => {
   Order.belongsTo(User);
+  Order.hasMany(OrderItem);
 };

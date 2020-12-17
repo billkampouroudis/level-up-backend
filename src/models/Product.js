@@ -56,6 +56,16 @@ export const initProduct = async (sequelize) => {
         withoutId: {
           attributes: { exclude: ['storeId'] }
         }
+      },
+      hooks: {
+        beforeCreate: (product) => {
+          const price = parseFloat(product.originalPrice) || 0;
+          product.originalPrice = price.toFixed(2);
+        },
+        beforeUpdate: (product) => {
+          const price = parseFloat(product.originalPrice) || 0;
+          product.originalPrice = price.toFixed(2);
+        }
       }
     }
   );

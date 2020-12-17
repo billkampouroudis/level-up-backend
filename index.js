@@ -11,6 +11,8 @@ import products from './src/routes/products';
 import stores from './src/routes/stores';
 import favorites from './src/routes/favorites';
 import users from './src/routes/users';
+import orders from './src/routes/orders';
+import orderItems from './src/routes/orderItems';
 
 const app = express();
 app.use(urlencoded({ extended: true }));
@@ -33,6 +35,8 @@ app.use(express.static('public'));
   app.use('/api/stores', stores);
   app.use('/api/favorites', favorites);
   app.use('/api/users', users);
+  app.use('/api/orders', orders);
+  app.use('/api/orderItems', orderItems);
 
   app.use(errorHandling);
 
