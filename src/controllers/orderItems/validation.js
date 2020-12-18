@@ -3,7 +3,9 @@ import Joi from 'joi';
 export const createSchema = Joi.object({
   quantity: Joi.number().required(),
 
-  productId: Joi.number().required()
+  productId: Joi.number().required(),
+
+  size: Joi.required()
 });
 
 export const getSchema = Joi.object({

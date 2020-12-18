@@ -8,26 +8,36 @@ const { INTEGER, STRING } = dataTypes;
 
 export let Store;
 export const initStore = async (sequelize) => {
-  Store = sequelize.define('store', {
-    id: {
-      type: INTEGER.UNSIGNED,
-      allowNull: false,
-      primaryKey: true,
-      autoIncrement: true
+  Store = sequelize.define(
+    'store',
+    {
+      id: {
+        type: INTEGER.UNSIGNED,
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true
+      },
+      brandName: {
+        type: STRING(45),
+        allowNull: false
+      },
+      contactPhone: {
+        type: STRING(20)
+      },
+      contactEmail: {
+        type: STRING(100),
+        allowNull: false,
+        unique: true
+      }
     },
-    brandName: {
-      type: STRING(45),
-      allowNull: false
-    },
-    contactPhone: {
-      type: STRING(20)
-    },
-    contactEmail: {
-      type: STRING(100),
-      allowNull: false,
-      unique: true
+    {
+      scopes: {
+        orderItem: {
+          attributes: ['id', 'brandName']
+        }
+      }
     }
-  });
+  );
 };
 
 export const initStoreAssociations = () => {

@@ -9,6 +9,7 @@ import {
 import { models } from '../../models';
 import { getSchema, partialUpdateSchema, deleteSchema } from './validation';
 import jwt_decode from 'jwt-decode';
+import { fullOrderSerializer } from './serializers';
 
 export async function createOrder(req, res) {
   try {
@@ -46,18 +47,43 @@ export async function createOrder(req, res) {
 
 export async function getOrder(req, res) {
   try {
-    const { storeId } = req.params;
-    const { Store } = models;
+    const { orderId } = req.params;
+    const { Order, OrderItem, Product, Store } = models;
 
-    await getSchema.validateAsync({ storeId: parseInt(storeId) });
+    await getSchema.validateAsync({ orderId: parseInt(orderId) });
 
-    let store = await Store.findOne({ where: { id: storeId } });
+    let order = await Order.findOne({
+      include: [
+        {
+          model: OrderItem,
+          as: 'orderItems',
+          include: [
+            {
+              model: Product.scope('orderItem'),
+              include: [
+                {
+                  model: Store.scope('orderItem')
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      where: { id: orderId }
+    });
 
-    if (!store) {
+    if (!order) {
       throw new NotFoundError();
     }
 
-    return successResponse(STATUS.HTTP_200_OK, store, res);
+    const totalPrice = await OrderItem.sum('price', {
+      where: { orderId: orderId }
+    });
+
+    const orderJson = fullOrderSerializer(order.toJSON());
+    orderJson.totalPrice = totalPrice;
+
+    return successResponse(STATUS.HTTP_200_OK, orderJson, res);
   } catch (error) {
     switch (error.name) {
       case 'ValidationError':
@@ -65,19 +91,21 @@ export async function getOrder(req, res) {
           new BadRequestError(error.details[0].message),
           res
         );
-      default:
+      case 'NotFoundError':
         return errorResponse(error, res);
+      default:
+        return errorResponse(new InternalServerError(error.message), res);
     }
   }
 }
 
 export async function listOrders(req, res) {
   try {
-    const { Store } = models;
+    const { Order } = models;
 
-    let stores = await Store.findAll();
+    let orders = await Order.findAll();
 
-    return successResponse(STATUS.HTTP_200_OK, stores, res);
+    return successResponse(STATUS.HTTP_200_OK, orders, res);
   } catch (error) {
     switch (error.name) {
       case 'ValidationError':

@@ -2,7 +2,7 @@ import Joi from 'joi';
 import rules from '../../constants/validation';
 
 export const getSchema = Joi.object({
-  storeId: Joi.number().required()
+  orderId: Joi.number().required()
 });
 
 export const partialUpdateSchema = Joi.object({

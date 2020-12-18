@@ -55,6 +55,9 @@ export const initProduct = async (sequelize) => {
       scopes: {
         withoutId: {
           attributes: { exclude: ['storeId'] }
+        },
+        orderItem: {
+          attributes: ['image', 'name', 'id', 'originalPrice', 'storeId']
         }
       },
       hooks: {

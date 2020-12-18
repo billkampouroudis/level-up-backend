@@ -2,7 +2,7 @@ import { dataTypes } from '../config/sequelize';
 import { Order } from './Order';
 import { Product } from './Product';
 
-const { INTEGER, DECIMAL, SMALLINT } = dataTypes;
+const { INTEGER, DECIMAL, SMALLINT, STRING } = dataTypes;
 
 export let OrderItem;
 export const initOrderItem = async (sequelize) => {
@@ -24,15 +24,20 @@ export const initOrderItem = async (sequelize) => {
         type: DECIMAL(10, 2),
         allowNull: false
       },
+      size: {
+        type: STRING,
+        allowNull: false,
+        unique: 'unique_order_item'
+      },
       productId: {
         type: INTEGER.UNSIGNED,
         allowNull: false,
-        unique: 'product_order_unique'
+        unique: 'unique_order_item'
       },
       orderId: {
         type: INTEGER.UNSIGNED,
         allowNull: false,
-        unique: 'product_order_unique'
+        unique: 'unique_order_item'
       }
     },
     {
