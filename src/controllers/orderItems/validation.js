@@ -13,11 +13,11 @@ export const getSchema = Joi.object({
 });
 
 export const partialUpdateSchema = Joi.object({
-  storeId: Joi.string().trim().required(),
-
   quantity: Joi.number().optional(),
 
-  price: Joi.number().optional()
+  orderItemId: Joi.number().required(),
+
+  size: Joi.optional()
 });
 
 export const deleteSchema = Joi.object({

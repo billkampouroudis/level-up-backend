@@ -43,15 +43,25 @@ export async function createOrderItem(req, res) {
   } catch (error) {
     switch (error.name) {
       case 'SequelizeUniqueConstraintError':
-        return errorResponse(
-          new UnprocessableEntityError(error.errors[0].message),
-          res
-        );
+        {
+          const { OrderItem } = models;
+
+          const orderItem = await OrderItem.findOne({
+            where: { productId: req.body.productId, size: req.body.size }
+          });
+
+          addProducts(orderItem.id, req.body.quantity)
+            .then(() => successResponse(STATUS.HTTP_200_OK, {}, res))
+            .catch((error) => errorResponse(error, res));
+        }
+        break;
       case 'ValidationError':
         return errorResponse(
           new BadRequestError(error.details[0].message),
           res
         );
+      case 'UnprocessableEntityError':
+        return errorResponse(new UnprocessableEntityError(error.message), res);
       default:
         return errorResponse(error, res);
     }
@@ -123,30 +133,60 @@ export async function listOrderItems(req, res) {
 export async function partialUpdateOrderItem(req, res) {
   try {
     const { orderItemId } = req.params;
-    const { OrderItem } = models;
+    const { User, Order, OrderItem, Product } = models;
 
     await partialUpdateSchema.validateAsync({ ...req.body, orderItemId });
 
     const tokenUser = jwt_decode(req.headers.authorization).user;
 
-    const user = await OrderItem.find({
+    const user = await User.findOne({
+      attributes: {
+        exclude: ['password']
+      },
       where: {
-        id: orderItemId
-      }
+        id: 1
+      },
+      include: [
+        {
+          model: Order,
+          attributes: ['id', 'status', 'userId'],
+          include: [
+            {
+              model: OrderItem,
+              as: 'orderItems',
+              attributes: ['id', 'productId', 'orderId']
+            }
+          ]
+        }
+      ]
     });
 
-    if (tokenUser.id !== user.id) {
+    if (!user || user.id !== tokenUser.id) {
       throw new ForbiddenError();
     }
 
-    const orderItem = await OrderItem.update(
-      { ...req.body },
-      {
-        where: {
-          id: orderItemId
-        }
-      }
-    );
+    let orderItem = await OrderItem.findOne({
+      where: {
+        id: orderItemId
+      },
+      returning: true,
+      plain: true
+    });
+
+    for (let key in req.body) {
+      orderItem[key] = req.body[key];
+    }
+
+    let product = null;
+    if (req.body.quantity) {
+      product = await Product.findOne({
+        where: { id: orderItem.productId }
+      });
+
+      orderItem.price = product.originalPrice * req.body.quantity;
+    }
+
+    await orderItem.save();
 
     return successResponse(STATUS.HTTP_200_OK, orderItem, res);
   } catch (error) {
@@ -159,8 +199,27 @@ export async function partialUpdateOrderItem(req, res) {
       case 'ForbiddenError':
         return errorResponse(error, res);
       default:
-        return new InternalServerError();
+        return errorResponse(new InternalServerError(error.message), res);
     }
+  }
+}
+
+async function addProducts(orderItemId, itemsToAdd) {
+  const { OrderItem, Product } = models;
+
+  try {
+    const orderItem = await OrderItem.findOne({ where: { id: orderItemId } });
+    orderItem.quantity += itemsToAdd;
+
+    const product = await Product.findOne({
+      where: { id: orderItem.productId }
+    });
+    orderItem.price = product.originalPrice * orderItem.quantity;
+
+    await orderItem.save();
+    return Promise.resolve();
+  } catch (error) {
+    return Promise.reject(error);
   }
 }
 
