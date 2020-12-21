@@ -105,13 +105,29 @@ export async function getOrderItem(req, res) {
 
 export async function listOrderItems(req, res) {
   try {
-    const { OrderItem, Product } = models;
+    const { OrderItem, Product, Store } = models;
 
     const orderItems = await OrderItem.findAll({
       include: [
         {
           model: Product,
-          as: 'product'
+          as: 'product',
+          attributes: {
+            exclude: [
+              'sizes',
+              'originalPrice',
+              'reducedPrice',
+              'createdAt',
+              'updatedAt',
+              'storeId'
+            ]
+          },
+          include: [
+            {
+              model: Store,
+              attributes: ['brandName', 'id']
+            }
+          ]
         }
       ]
     });

@@ -101,9 +101,50 @@ export async function getOrder(req, res) {
 
 export async function listOrders(req, res) {
   try {
-    const { Order } = models;
+    const { Order, Product, Store, OrderItem } = models;
+    const { status } = req.query;
 
-    let orders = await Order.findAll();
+    const tokenUser = jwt_decode(req.headers.authorization).user;
+
+    let filters = { userId: tokenUser.id };
+    if (status) {
+      filters = { ...filters, status };
+    }
+
+    let orders = await Order.findAll({
+      where: filters,
+      include: [
+        {
+          model: OrderItem,
+          as: 'orderItems',
+          include: [
+            {
+              model: Product.scope('orderItem'),
+              include: [
+                {
+                  model: Store.scope('orderItem')
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    });
+
+    if (orders.length === 0) {
+      return successResponse(STATUS.HTTP_200_OK, [], res);
+    }
+
+    let ordersJson = [];
+    for (let order of orders) {
+      const totalPrice = await OrderItem.sum('price', {
+        where: { orderId: order.id }
+      });
+
+      const orderJson = fullOrderSerializer(order.toJSON());
+      orderJson.totalPrice = totalPrice;
+      ordersJson.push(orderJson);
+    }
 
     return successResponse(STATUS.HTTP_200_OK, orders, res);
   } catch (error) {
