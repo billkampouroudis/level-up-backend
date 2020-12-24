@@ -9,7 +9,7 @@ export const createSchema = Joi.object({
 });
 
 export const getSchema = Joi.object({
-  storeId: Joi.number().required()
+  orderItemId: Joi.number().required()
 });
 
 export const partialUpdateSchema = Joi.object({
@@ -21,5 +21,5 @@ export const partialUpdateSchema = Joi.object({
 });
 
 export const deleteSchema = Joi.object({
-  storeId: Joi.string().trim().required()
+  orderItemId: Joi.string().trim().required()
 });

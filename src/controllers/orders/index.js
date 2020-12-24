@@ -7,22 +7,31 @@ import {
   InternalServerError
 } from '../../constants/errors';
 import { models } from '../../models';
-import { getSchema, partialUpdateSchema, deleteSchema } from './validation';
+import {
+  createSchema,
+  getSchema,
+  partialUpdateSchema,
+  deleteSchema
+} from './validation';
 import jwt_decode from 'jwt-decode';
 import { fullOrderSerializer } from './serializers';
 
 export async function createOrder(req, res) {
   try {
-    const { Order } = models;
+    const { storeId } = req.body;
 
+    await createSchema.validateAsync({ storeId: parseInt(storeId) });
+
+    const { Order } = models;
     const tokenUser = jwt_decode(req.headers.authorization).user;
 
     const order = await Order.findOrCreate({
-      where: { userId: tokenUser.id, status: 'in_cart' },
+      where: { userId: tokenUser.id, status: 'in_cart', storeId },
       limit: 1,
       defaults: {
         userId: tokenUser.id,
-        status: 'in_cart'
+        status: 'in_cart',
+        storeId
       }
     });
 
@@ -40,7 +49,7 @@ export async function createOrder(req, res) {
           res
         );
       default:
-        return new InternalServerError(error.name);
+        return errorResponse(new InternalServerError(error.message), res);
     }
   }
 }

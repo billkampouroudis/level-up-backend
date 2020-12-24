@@ -24,12 +24,20 @@ export async function createOrderItem(req, res) {
 
     const { OrderItem, Product } = models;
 
-    const createUserResponse = await createOrder(req, res);
+    const product = await Product.findOne({ where: { id: productId } });
+    if (!product) {
+      throw new UnprocessableEntityError();
+    }
+
+    const reqBody = { ...req.body, storeId: product.storeId };
+    const createUserResponse = await createOrder(
+      { ...req, body: reqBody },
+      res
+    );
     if (createUserResponse.error) {
       return errorResponse(createUserResponse.error, res);
     }
 
-    const product = await Product.findOne({ where: { id: productId } });
     const finalPrice = product.originalPrice * quantity;
 
     const { id } = createUserResponse.data.dataValues;
@@ -149,7 +157,7 @@ export async function listOrderItems(req, res) {
 export async function partialUpdateOrderItem(req, res) {
   try {
     const { orderItemId } = req.params;
-    const { User, Order, OrderItem, Product } = models;
+    const { User, Order, OrderItem, Product, Store } = models;
 
     await partialUpdateSchema.validateAsync({ ...req.body, orderItemId });
 
@@ -185,6 +193,28 @@ export async function partialUpdateOrderItem(req, res) {
       where: {
         id: orderItemId
       },
+      include: [
+        {
+          model: Product,
+          as: 'product',
+          attributes: {
+            exclude: [
+              'sizes',
+              'originalPrice',
+              'reducedPrice',
+              'createdAt',
+              'updatedAt',
+              'storeId'
+            ]
+          },
+          include: [
+            {
+              model: Store,
+              attributes: ['brandName', 'id']
+            }
+          ]
+        }
+      ],
       returning: true,
       plain: true
     });
@@ -242,20 +272,33 @@ async function addProducts(orderItemId, itemsToAdd) {
 export async function removeOrderItem(req, res) {
   try {
     const { orderItemId } = req.params;
-    const { OrderItem } = models;
+    const { OrderItem, Order } = models;
 
-    await deleteSchema.validateAsync(orderItemId);
+    await deleteSchema.validateAsync({ orderItemId });
 
     const tokenUser = jwt_decode(req.headers.authorization).user;
 
-    const user = await OrderItem.find({
-      where: {
-        id: orderItemId
-      }
+    const orders = await Order.findAll({
+      where: { userId: tokenUser.id, status: 'in_cart' },
+      include: [
+        {
+          model: OrderItem,
+          as: 'orderItems'
+        }
+      ]
     });
 
-    if (tokenUser.id !== user.id) {
+    if (!orders) {
       throw new ForbiddenError();
+    }
+
+    for (let order of orders) {
+      if (order.orderItems.find((item) => item.id === parseInt(orderItemId))) {
+        await Order.destroy({
+          where: { id: order.id }
+        });
+        return successResponse(STATUS.HTTP_200_OK, {}, res);
+      }
     }
 
     OrderItem.destroy({
@@ -273,7 +316,7 @@ export async function removeOrderItem(req, res) {
       case 'ForbiddenError':
         return errorResponse(error, res);
       default:
-        return new InternalServerError();
+        return errorResponse(new InternalServerError(error.message), res);
     }
   }
 }

@@ -3,6 +3,7 @@ import { StoreUser } from './StoreUser';
 import { User } from './User';
 import { Address } from './Address';
 import { Product } from './Product';
+import { Order } from './Order';
 
 const { INTEGER, STRING } = dataTypes;
 
@@ -44,4 +45,5 @@ export const initStoreAssociations = () => {
   Store.belongsToMany(User, { through: StoreUser });
   Store.belongsToMany(Address, { through: 'address_store' });
   Store.hasMany(Product);
+  Store.hasMany(Order);
 };
