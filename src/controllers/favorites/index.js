@@ -42,7 +42,7 @@ export async function createFavorite(req, res) {
 
 export async function listFavorites(req, res) {
   try {
-    const { User } = models;
+    const { User, Store } = models;
 
     const tokenUser = jwt_decode(req.headers.authorization).user;
 
@@ -52,7 +52,14 @@ export async function listFavorites(req, res) {
       }
     });
 
-    const favorites = await user.getFavoriteProducts();
+    const favorites = await user.getFavoriteProducts({
+      include: [
+        {
+          model: Store,
+          as: 'store'
+        }
+      ]
+    });
 
     return successResponse(STATUS.HTTP_200_OK, favorites, res);
   } catch (error) {
