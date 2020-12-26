@@ -38,6 +38,9 @@ export const initAddress = async (sequelize) => {
       },
       floor: {
         type: TINYINT.UNSIGNED
+      },
+      primary: {
+        type: TINYINT.UNSIGNED
       }
     },
     {

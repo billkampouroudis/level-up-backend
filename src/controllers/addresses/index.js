@@ -13,12 +13,15 @@ import jwt_decode from 'jwt-decode';
 
 export async function createAddress(req, res) {
   try {
-    const tokenUser = jwt_decode(req.headers.authorization).user;
-
     const { Address } = models;
+    const tokenUser = jwt_decode(req.headers.authorization).user;
 
     let address = null;
     if (tokenUser.storeId) {
+      const storeAddress = await Address.findOne({
+        where: { storeId: tokenUser.storeId, primary: true }
+      });
+
       await createSchema.validateAsync({
         ...req.body,
         storeId: tokenUser.storeId
@@ -26,9 +29,14 @@ export async function createAddress(req, res) {
 
       address = await Address.create({
         ...req.body,
-        storeId: tokenUser.storeId
+        storeId: tokenUser.storeId,
+        primary: !storeAddress
       });
     } else {
+      const userAddress = await Address.findOne({
+        where: { userId: tokenUser.id, primary: true }
+      });
+
       await createSchema.validateAsync({
         ...req.body,
         userId: tokenUser.id
@@ -36,7 +44,8 @@ export async function createAddress(req, res) {
 
       address = await Address.create({
         ...req.body,
-        userId: tokenUser.id
+        userId: tokenUser.id,
+        primary: !userAddress
       });
     }
 
@@ -52,12 +61,12 @@ export async function createAddress(req, res) {
           new UnprocessableEntityError('This product is already in favorites'),
           res
         );
-      case 'SequelizeValidationError':
+      case ('SequelizeValidationError', 'ValidationError'):
         return errorResponse(new BadRequestError(error.errors[0].message), res);
       case 'BadRequestError':
         return errorResponse(error, res);
       default:
-        return errorResponse(new InternalServerError(), res);
+        return errorResponse(new InternalServerError(error.message), res);
     }
   }
 }
@@ -182,5 +191,64 @@ export async function removeAddress(req, res) {
     return successResponse(STATUS.HTTP_200_OK, {}, res);
   } catch (error) {
     return errorResponse(new InternalServerError(), res);
+  }
+}
+
+export async function setPrimaryAddress(req, res) {
+  try {
+    const { Address } = models;
+    const tokenUser = jwt_decode(req.headers.authorization).user;
+    const newPrimaryAddressId = req.body.newPrimaryAddressId | 0;
+
+    let updatedAddresses = [];
+    if (tokenUser.storeId) {
+      const storeAddresses = await Address.findAll({
+        where: { storeId: tokenUser.storeId }
+      });
+
+      for (let address of storeAddresses) {
+        if (address.id === newPrimaryAddressId) {
+          address.primary = true;
+          await address.save();
+        } else if (address.primary) {
+          address.primary = false;
+          await address.save();
+        }
+
+        updatedAddresses.push(address);
+      }
+    } else {
+      const userAddresses = await Address.findAll({
+        where: { userId: tokenUser.id }
+      });
+
+      for (let address of userAddresses) {
+        if (address.id === newPrimaryAddressId) {
+          address.primary = true;
+          await address.save();
+        } else if (address.primary) {
+          address.primary = false;
+          await address.save();
+        }
+
+        updatedAddresses.push(address);
+      }
+    }
+
+    return successResponse(STATUS.HTTP_200_OK, updatedAddresses, res);
+  } catch (error) {
+    switch (error.name) {
+      case 'SequelizeUniqueConstraintError':
+        return errorResponse(
+          new UnprocessableEntityError('This product is already in favorites'),
+          res
+        );
+      case ('SequelizeValidationError', 'ValidationError'):
+        return errorResponse(new BadRequestError(error.errors[0].message), res);
+      case 'BadRequestError':
+        return errorResponse(error, res);
+      default:
+        return errorResponse(new InternalServerError(error.message), res);
+    }
   }
 }

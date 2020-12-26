@@ -4,7 +4,8 @@ import {
   getAddress,
   listAddresses,
   partialUpdateAddress,
-  removeAddress
+  removeAddress,
+  setPrimaryAddress
 } from '../controllers/addresses';
 import auth from '../middlewares/auth';
 
@@ -39,6 +40,14 @@ addresss.delete(
   (req, res, next) => auth(req, res, next),
   async (req, res) => {
     res.json(await removeAddress(req, res));
+  }
+);
+
+addresss.post(
+  '/setPrimaryAddress',
+  (req, res, next) => auth(req, res, next),
+  async (req, res) => {
+    res.json(await setPrimaryAddress(req, res));
   }
 );
 
