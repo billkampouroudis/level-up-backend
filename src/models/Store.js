@@ -43,7 +43,7 @@ export const initStore = async (sequelize) => {
 
 export const initStoreAssociations = () => {
   Store.belongsToMany(User, { through: StoreUser });
-  Store.belongsToMany(Address, { through: 'address_store' });
   Store.hasMany(Product);
   Store.hasMany(Order);
+  Store.hasMany(Address);
 };
