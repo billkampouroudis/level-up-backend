@@ -120,7 +120,7 @@ export async function listOrders(req, res) {
       filters = { ...filters, status };
     }
 
-    let orders = await Order.findAll({
+    const orders = await Order.findAll({
       where: filters,
       include: [
         {
@@ -142,17 +142,6 @@ export async function listOrders(req, res) {
 
     if (orders.length === 0) {
       return successResponse(STATUS.HTTP_200_OK, [], res);
-    }
-
-    let ordersJson = [];
-    for (let order of orders) {
-      const totalPrice = await OrderItem.sum('price', {
-        where: { orderId: order.id }
-      });
-
-      const orderJson = fullOrderSerializer(order.toJSON());
-      orderJson.totalPrice = totalPrice;
-      ordersJson.push(orderJson);
     }
 
     return successResponse(STATUS.HTTP_200_OK, orders, res);

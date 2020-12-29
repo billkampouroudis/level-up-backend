@@ -122,14 +122,7 @@ export async function listOrderItems(req, res) {
           model: Product,
           as: 'product',
           attributes: {
-            exclude: [
-              'sizes',
-              'originalPrice',
-              'reducedPrice',
-              'createdAt',
-              'updatedAt',
-              'storeId'
-            ]
+            exclude: ['sizes', 'createdAt', 'updatedAt', 'storeId']
           },
           include: [
             {
@@ -158,67 +151,44 @@ export async function listOrderItems(req, res) {
 export async function partialUpdateOrderItem(req, res) {
   try {
     const { orderItemId } = req.params;
-    const { User, Order, OrderItem, Product, Store } = models;
+    const { Order, OrderItem, Product, Store } = models;
 
     await partialUpdateSchema.validateAsync({ ...req.body, orderItemId });
 
     const tokenUser = jwt_decode(req.headers.authorization).user;
-
-    const user = await User.findOne({
-      attributes: {
-        exclude: ['password']
-      },
-      where: {
-        id: 1
-      },
+    const order = await Order.findOne({
+      where: { userId: tokenUser.id },
       include: [
         {
-          model: Order,
-          attributes: ['id', 'status', 'userId'],
+          model: OrderItem,
+          as: 'orderItems',
+          where: { id: orderItemId },
           include: [
             {
-              model: OrderItem,
-              as: 'orderItems',
-              attributes: ['id', 'productId', 'orderId']
+              model: Product,
+              as: 'product',
+              attributes: {
+                exclude: ['sizes', 'createdAt', 'updatedAt', 'storeId']
+              },
+              include: [
+                {
+                  model: Store,
+                  attributes: ['brandName', 'id']
+                }
+              ]
             }
-          ]
+          ],
+          plain: true,
+          returning: true
         }
       ]
     });
 
-    if (!user || user.id !== tokenUser.id) {
-      throw new ForbiddenError();
+    if (!order || !order.orderItems[0]) {
+      throw new NotFoundError();
     }
 
-    let orderItem = await OrderItem.findOne({
-      where: {
-        id: orderItemId
-      },
-      include: [
-        {
-          model: Product,
-          as: 'product',
-          attributes: {
-            exclude: [
-              'sizes',
-              'originalPrice',
-              'reducedPrice',
-              'createdAt',
-              'updatedAt',
-              'storeId'
-            ]
-          },
-          include: [
-            {
-              model: Store,
-              attributes: ['brandName', 'id']
-            }
-          ]
-        }
-      ],
-      returning: true,
-      plain: true
-    });
+    let orderItem = order.orderItems[0];
 
     for (let key in req.body) {
       orderItem[key] = req.body[key];
