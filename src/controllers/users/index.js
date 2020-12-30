@@ -54,7 +54,10 @@ export async function getUser(req, res) {
 
     await getSchema.validateAsync({ userId: parseInt(userId) });
 
-    let user = await User.findOne({ where: { id: userId } });
+    let user = await User.findOne({
+      where: { id: userId },
+      attributes: { exclude: ['password'] }
+    });
 
     if (!user) {
       throw new NotFoundError();
@@ -80,7 +83,7 @@ export async function listUsers(req, res) {
   try {
     const { User } = models;
 
-    let users = await User.findAll();
+    let users = await User.findAll({ attributes: { exclude: ['password'] } });
 
     return successResponse(STATUS.HTTP_200_OK, authSerializer(users), res);
   } catch (error) {

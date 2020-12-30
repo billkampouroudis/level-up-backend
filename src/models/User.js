@@ -7,7 +7,7 @@ import { StoreUser } from './StoreUser';
 import { Product } from './Product';
 import { FavoriteProduct } from './FavoriteProduct';
 
-const { STRING, INTEGER, TINYINT } = dataTypes;
+const { STRING, INTEGER } = dataTypes;
 
 export let User;
 export const initUser = async (sequelize) => {
@@ -29,13 +29,9 @@ export const initUser = async (sequelize) => {
         type: STRING(45),
         allowNull: false
       },
-      level: {
-        type: TINYINT.UNSIGNED,
-        defaultValue: 1
-      },
       xp: {
         type: INTEGER.UNSIGNED,
-        defaultValue: 0
+        defaultValue: 50
       },
       email: {
         type: STRING(100),

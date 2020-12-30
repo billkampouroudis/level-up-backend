@@ -1,7 +1,7 @@
 const is = {
   falsy: (item) => {
     return (
-      item === undefined ||
+      item === 'undefined' ||
       item === null ||
       item === 0 ||
       item === '' ||
@@ -20,6 +20,9 @@ const is = {
       item.constructor === Object &&
       Object.keys(item).length > 0
     );
+  },
+  number: (value) => {
+    return typeof value === 'number' && !isNaN(value);
   }
 };
 

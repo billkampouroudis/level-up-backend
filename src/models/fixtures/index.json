@@ -5,8 +5,7 @@
       "id": 1,
       "firstName": "Bill",
       "lastName": "Kampouroudis",
-      "level": 1,
-      "xp": 300,
+      "xp": 0,
       "email": "v.kampouroudis@gmail.com",
       "password": "123456789"
     }

@@ -16,6 +16,9 @@ import {
 } from './validation';
 import jwt_decode from 'jwt-decode';
 import { fullOrderSerializer } from './serializers';
+import { calculateCosts } from '../../utils/orders/orders';
+import { calculateUserLevel, giveXpFromOrder } from '../../utils/levels/levels';
+import { User } from '../../models/User';
 
 export async function createOrder(req, res) {
   try {
@@ -62,7 +65,10 @@ export async function getOrder(req, res) {
 
     await getSchema.validateAsync({ orderId: parseInt(orderId) });
 
+    const tokenUser = jwt_decode(req.headers.authorization).user;
+
     let order = await Order.findOne({
+      where: { id: orderId, userId: tokenUser.id },
       include: [
         {
           model: OrderItem,
@@ -78,8 +84,7 @@ export async function getOrder(req, res) {
             }
           ]
         }
-      ],
-      where: { id: orderId }
+      ]
     });
 
     if (!order) {
@@ -161,7 +166,7 @@ export async function listOrders(req, res) {
 
 export async function partialUpdateOrder(req, res) {
   try {
-    const { Order } = models;
+    const { Order, OrderItem, Product, Store } = models;
     const { addressId } = req.body;
     const orderId = req.params.orderId || req.body.orderId;
 
@@ -175,8 +180,25 @@ export async function partialUpdateOrder(req, res) {
     });
 
     const tokenUser = jwt_decode(req.headers.authorization).user;
-    const order = await Order.findOne({
-      where: { id: orderId, userId: tokenUser.id }
+
+    let order = await Order.findOne({
+      where: { id: orderId, userId: tokenUser.id },
+      include: [
+        {
+          model: OrderItem,
+          as: 'orderItems',
+          include: [
+            {
+              model: Product.scope('orderItem'),
+              include: [
+                {
+                  model: Store.scope('orderItem')
+                }
+              ]
+            }
+          ]
+        }
+      ]
     });
 
     if (!order) {
@@ -210,13 +232,13 @@ export async function partialUpdateOrders(req, res) {
     const { orderIds, addressId, status } = req.body;
 
     const addressIdNumber = parseInt(addressId) || undefined;
-    console.log(addressId);
 
     await partialUpdateMultipleSchema.validateAsync({
       ...req.body,
       addressId: addressIdNumber
     });
 
+    // Update all the given orders
     let updatedOrders = [];
     for (let orderId of orderIds) {
       let data = { orderId };
@@ -242,7 +264,26 @@ export async function partialUpdateOrders(req, res) {
         throw new BadRequestError(response.error.message);
       }
 
-      updatedOrders.push(response.data);
+      updatedOrders.push(response.data.toJSON());
+    }
+
+    // Add xp points to the user
+    if (status === 'registered') {
+      const costs = calculateCosts(updatedOrders);
+      const userId = updatedOrders[0].userId;
+      let user = await User.findOne({
+        where: { id: userId },
+        attributes: {
+          exclude: ['password']
+        }
+      });
+
+      user.xp += giveXpFromOrder(costs.reducedCost);
+      await user.save();
+
+      user.level = calculateUserLevel(user.xp);
+
+      return successResponse(STATUS.HTTP_200_OK, user, res);
     }
 
     return successResponse(STATUS.HTTP_200_OK, updatedOrders, res);
