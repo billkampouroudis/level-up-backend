@@ -1,6 +1,5 @@
 import STATUS from '../../constants/statusCodes';
 import { successResponse, errorResponse } from '../../utils/response';
-import get from '../../utils/misc/get';
 import {
   BadRequestError,
   UnprocessableEntityError,
@@ -87,12 +86,7 @@ export async function listAddresses(req, res) {
 
     return successResponse(STATUS.HTTP_200_OK, addresses, res);
   } catch (error) {
-    return errorResponse(
-      new InternalServerError(
-        get.safe(() => error.errors[0].message, 'Something went wrong')
-      ),
-      res
-    );
+    return errorResponse(new InternalServerError(error.message), res);
   }
 }
 

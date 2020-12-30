@@ -11,6 +11,7 @@ import {
   createSchema,
   getSchema,
   partialUpdateSchema,
+  partialUpdateMultipleSchema,
   deleteSchema
 } from './validation';
 import jwt_decode from 'jwt-decode';
@@ -153,29 +154,42 @@ export async function listOrders(req, res) {
           res
         );
       default:
-        return errorResponse(error, res);
+        return errorResponse(new InternalServerError(error.message), res);
     }
   }
 }
 
 export async function partialUpdateOrder(req, res) {
   try {
-    const { Store } = models;
-    const { storeId } = req.params;
+    const { Order } = models;
+    const { addressId } = req.body;
+    const orderId = req.params.orderId || req.body.orderId;
 
-    // TODO: Update only if the user is admin of this store
-    await partialUpdateSchema.validateAsync({ ...req.body, storeId });
+    const orderIdNumber = parseInt(orderId);
+    const addressIdNumber = parseInt(addressId) || undefined;
 
-    let store = await Store.update(
-      { ...req.body },
-      {
-        where: {
-          id: storeId
-        }
-      }
-    );
+    await partialUpdateSchema.validateAsync({
+      ...req.body,
+      orderId: orderIdNumber,
+      addressId: addressIdNumber
+    });
 
-    return successResponse(STATUS.HTTP_200_OK, store, res);
+    const tokenUser = jwt_decode(req.headers.authorization).user;
+    const order = await Order.findOne({
+      where: { id: orderId, userId: tokenUser.id }
+    });
+
+    if (!order) {
+      throw new NotFoundError();
+    }
+
+    for (let key in req.body) {
+      order[key] = req.body[key];
+    }
+
+    await order.save();
+
+    return successResponse(STATUS.HTTP_200_OK, order, res);
   } catch (error) {
     switch (error.name) {
       case 'ValidationError':
@@ -183,12 +197,69 @@ export async function partialUpdateOrder(req, res) {
           new BadRequestError(error.details[0].message),
           res
         );
-      default:
+      case 'NotFoundError':
         return errorResponse(error, res);
+      default:
+        return errorResponse(new InternalServerError(error.message), res);
     }
   }
 }
 
+export async function partialUpdateOrders(req, res) {
+  try {
+    const { orderIds, addressId, status } = req.body;
+
+    const addressIdNumber = parseInt(addressId) || undefined;
+    console.log(addressId);
+
+    await partialUpdateMultipleSchema.validateAsync({
+      ...req.body,
+      addressId: addressIdNumber
+    });
+
+    let updatedOrders = [];
+    for (let orderId of orderIds) {
+      let data = { orderId };
+
+      if (status) {
+        if (status === 'registered' && !addressIdNumber) {
+          throw new BadRequestError(
+            'Address is required in order to register an order'
+          );
+        }
+
+        data.status = status;
+      }
+
+      if (addressId) {
+        if (status) {
+          data.addressId = addressIdNumber;
+        }
+      }
+
+      const response = await partialUpdateOrder({ ...req, body: data }, res);
+      if (response.error) {
+        throw new BadRequestError(response.error.message);
+      }
+
+      updatedOrders.push(response.data);
+    }
+
+    return successResponse(STATUS.HTTP_200_OK, updatedOrders, res);
+  } catch (error) {
+    switch (error.name) {
+      case 'ValidationError':
+        return errorResponse(
+          new BadRequestError(error.details[0].message),
+          res
+        );
+      case ('NotFoundError', 'BadRequestError'):
+        return errorResponse(error, res);
+      default:
+        return errorResponse(new InternalServerError(error.message), res);
+    }
+  }
+}
 export async function removeOrder(req, res) {
   try {
     const { storeId } = req.params;

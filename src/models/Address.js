@@ -1,6 +1,7 @@
 import { dataTypes } from '../config/sequelize';
 import { Store } from './Store';
 import { User } from './User';
+import { Order } from './Order';
 
 const { STRING, TINYINT, INTEGER, SMALLINT } = dataTypes;
 
@@ -52,4 +53,5 @@ export const initAddress = async (sequelize) => {
 export const initAddressAssociations = async () => {
   Address.belongsTo(User);
   Address.belongsTo(Store);
+  Address.hasMany(Order);
 };

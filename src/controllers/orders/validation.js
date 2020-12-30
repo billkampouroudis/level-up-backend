@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import rules from '../../constants/validation';
+// import rules from '../../constants/validation';
 
 export const createSchema = Joi.object({
   storeId: Joi.number().required()
@@ -10,26 +10,17 @@ export const getSchema = Joi.object({
 });
 
 export const partialUpdateSchema = Joi.object({
-  brandName: Joi.string().trim().optional(),
+  orderId: Joi.number().required(),
+  status: Joi.string(),
+  addressId: Joi.number()
+});
 
-  contactPhone: Joi.string().trim().pattern(rules.phoneRegex).optional(),
-
-  contactEmail: Joi.string()
-    .trim()
-    .pattern(rules.emailRegex)
-    .max(rules.defaultMaxLength)
-    .optional(),
-
-  avatar: Joi.object({
-    fieldname: Joi.string(),
-    originalname: Joi.string(),
-    encoding: Joi.string(),
-    mimetype: Joi.string().valid(...rules.defaultFileTypes),
-    buffer: Joi.any(),
-    size: Joi.number().max(rules.defaultMaxFileSize)
-  }).optional()
+export const partialUpdateMultipleSchema = Joi.object({
+  status: Joi.string(),
+  addressId: Joi.number(),
+  orderIds: Joi.array().items(Joi.number()).required()
 });
 
 export const deleteSchema = Joi.object({
-  storeId: Joi.string().trim().required()
+  orderId: Joi.string().trim().required()
 });

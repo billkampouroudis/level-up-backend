@@ -4,6 +4,7 @@ import {
   getOrder,
   listOrders,
   partialUpdateOrder,
+  partialUpdateOrders,
   removeOrder
 } from '../controllers/orders';
 import auth from '../middlewares/auth';
@@ -26,13 +27,13 @@ orders.get('/', async (req, res) => {
   res.json(await listOrders(req, res));
 });
 
-orders.patch(
-  '/:orderId',
-  (req, res, next) => auth(req, res, next, ['admin']),
-  async (req, res) => {
-    res.json(await partialUpdateOrder(req, res));
-  }
-);
+orders.patch('/:orderId', auth, async (req, res) => {
+  res.json(await partialUpdateOrder(req, res));
+});
+
+orders.patch('/', auth, async (req, res) => {
+  res.json(await partialUpdateOrders(req, res));
+});
 
 orders.delete(
   '/:orderId',
