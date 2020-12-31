@@ -123,7 +123,7 @@ export async function listOrders(req, res) {
 
     let filters = { userId: tokenUser.id };
     if (status) {
-      filters = { ...filters, status };
+      filters = { ...filters, status: status.split(',') };
     }
 
     const orders = await Order.findAll({
