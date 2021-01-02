@@ -28,9 +28,6 @@ export const initProduct = async (sequelize) => {
         type: DECIMAL(10, 2),
         allowNull: false
       },
-      reducedPrice: {
-        type: DECIMAL(10, 2)
-      },
       discountLevel: {
         type: TINYINT.UNSIGNED
       },
@@ -57,7 +54,14 @@ export const initProduct = async (sequelize) => {
           attributes: { exclude: ['storeId'] }
         },
         orderItem: {
-          attributes: ['image', 'name', 'id', 'originalPrice', 'storeId']
+          attributes: [
+            'image',
+            'name',
+            'id',
+            'originalPrice',
+            'storeId',
+            'discountLevel'
+          ]
         }
       },
       hooks: {
