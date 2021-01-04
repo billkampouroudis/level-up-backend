@@ -4,7 +4,7 @@ import { OrderItem } from './OrderItem';
 import { Store } from './Store';
 import { Address } from './Address';
 
-const { INTEGER, STRING } = dataTypes;
+const { INTEGER, STRING, DATE } = dataTypes;
 
 export let Order;
 export const initOrder = async (sequelize) => {
@@ -25,6 +25,9 @@ export const initOrder = async (sequelize) => {
         validate: {
           isIn: [['in_cart', 'registered', 'sent', 'closed']]
         }
+      },
+      registeredAt: {
+        type: DATE
       },
       addressId: {
         type: INTEGER.UNSIGNED

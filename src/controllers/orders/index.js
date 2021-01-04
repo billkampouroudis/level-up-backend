@@ -19,6 +19,7 @@ import { fullOrderSerializer } from './serializers';
 import { calculateCosts } from '../../utils/orders/orders';
 import { calculateUserLevel, giveXpFromOrder } from '../../utils/levels/levels';
 import { User } from '../../models/User';
+import moment from 'moment';
 
 export async function createOrder(req, res) {
   try {
@@ -257,6 +258,10 @@ export async function partialUpdateOrders(req, res) {
         if (status) {
           data.addressId = addressIdNumber;
         }
+      }
+
+      if (status === 'registered') {
+        data.registeredAt = moment().format();
       }
 
       const response = await partialUpdateOrder({ ...req, body: data }, res);

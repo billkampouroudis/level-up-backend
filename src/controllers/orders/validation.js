@@ -12,7 +12,8 @@ export const getSchema = Joi.object({
 export const partialUpdateSchema = Joi.object({
   orderId: Joi.number().required(),
   status: Joi.string(),
-  addressId: Joi.number()
+  addressId: Joi.number(),
+  registeredAt: Joi.date()
 });
 
 export const partialUpdateMultipleSchema = Joi.object({
