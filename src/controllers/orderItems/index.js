@@ -244,6 +244,7 @@ export async function removeOrderItem(req, res) {
   try {
     const { orderItemId } = req.params;
     const { OrderItem, Order } = models;
+    const orderItemIdNumber = parseInt(orderItemId);
 
     await deleteSchema.validateAsync({ orderItemId });
 
@@ -263,18 +264,19 @@ export async function removeOrderItem(req, res) {
       throw new ForbiddenError();
     }
 
-    for (let order of orders) {
-      if (order.orderItems.find((item) => item.id === parseInt(orderItemId))) {
-        await Order.destroy({
-          where: { id: order.id }
-        });
-        return successResponse(STATUS.HTTP_200_OK, {}, res);
+    let orderIndex = -1;
+    for (let [index, order] of orders.entries()) {
+      for (let orderItem of order.orderItems) {
+        if (orderItem.id === orderItemIdNumber) {
+          orderIndex = index;
+          await orderItem.destroy();
+        }
       }
     }
 
-    OrderItem.destroy({
-      where: { id: orderItemId }
-    });
+    if (orders[orderIndex].length === 0) {
+      await orders[orderIndex].destroy();
+    }
 
     return successResponse(STATUS.HTTP_200_OK, {}, res);
   } catch (error) {
