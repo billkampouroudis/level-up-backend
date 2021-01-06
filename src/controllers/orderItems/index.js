@@ -274,7 +274,7 @@ export async function removeOrderItem(req, res) {
       }
     }
 
-    if (orders[orderIndex].length === 0) {
+    if (orderIndex !== -1 && orders[orderIndex].orderItems.length === 1) {
       await orders[orderIndex].destroy();
     }
 
