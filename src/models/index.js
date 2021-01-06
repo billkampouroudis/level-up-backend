@@ -14,6 +14,11 @@ import {
 } from './StoreUser';
 import { User, initUser, initUserAssociations } from './User';
 import { FavoriteProduct, initFavoriteProduct } from './FavoriteProduct';
+import {
+  ProductRating,
+  initProductRating,
+  initProductRatingAssociations
+} from './ProductRating';
 
 export let models;
 const initModels = async (sequelize) => {
@@ -26,6 +31,7 @@ const initModels = async (sequelize) => {
   await initStoreUser(sequelize);
   await initUser(sequelize);
   await initFavoriteProduct(sequelize);
+  await initProductRating(sequelize);
 
   // Initiate associations between models
   await initAddressAssociations();
@@ -35,6 +41,7 @@ const initModels = async (sequelize) => {
   await initStoreAssociations();
   await initStoreUserAssociations();
   await initUserAssociations();
+  await initProductRatingAssociations();
 
   models = {
     Address,
@@ -44,7 +51,8 @@ const initModels = async (sequelize) => {
     Store,
     StoreUser,
     User,
-    FavoriteProduct
+    FavoriteProduct,
+    ProductRating
   };
 };
 

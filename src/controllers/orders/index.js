@@ -129,6 +129,7 @@ export async function listOrders(req, res) {
 
     const orders = await Order.findAll({
       where: filters,
+      order: [['registeredAt', 'DESC']],
       include: [
         {
           model: OrderItem,

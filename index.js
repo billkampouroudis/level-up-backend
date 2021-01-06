@@ -14,6 +14,7 @@ import users from './src/routes/users';
 import orders from './src/routes/orders';
 import orderItems from './src/routes/orderItems';
 import addresses from './src/routes/addresses';
+import productRatings from './src/routes/productRatings';
 
 const app = express();
 app.use(urlencoded({ extended: true }));
@@ -39,6 +40,7 @@ app.use(express.static('public'));
   app.use('/api/orders', orders);
   app.use('/api/orderItems', orderItems);
   app.use('/api/addresses', addresses);
+  app.use('/api/productRatings', productRatings);
 
   app.use(errorHandling);
 
