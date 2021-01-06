@@ -6,6 +6,7 @@ import { Order } from './Order';
 import { StoreUser } from './StoreUser';
 import { Product } from './Product';
 import { FavoriteProduct } from './FavoriteProduct';
+import { ProductRating } from './ProductRating';
 
 const { STRING, INTEGER } = dataTypes;
 
@@ -77,7 +78,7 @@ export const initUserAssociations = async () => {
     as: 'favoriteProducts',
     through: FavoriteProduct
   });
-
+  Product.belongsToMany(User, { through: ProductRating });
   User.hasMany(Address);
   User.hasMany(Order);
 };

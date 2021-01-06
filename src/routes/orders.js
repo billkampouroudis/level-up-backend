@@ -19,11 +19,11 @@ orders.post(
   }
 );
 
-orders.get('/:orderId', async (req, res) => {
+orders.get('/:orderId', auth, async (req, res) => {
   res.json(await getOrder(req, res));
 });
 
-orders.get('/', async (req, res) => {
+orders.get('/', auth, async (req, res) => {
   res.json(await listOrders(req, res));
 });
 

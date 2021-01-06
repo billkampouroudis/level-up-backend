@@ -2,6 +2,7 @@ import { dataTypes } from '../config/sequelize';
 import { Store } from './Store';
 import { User } from './User';
 import { FavoriteProduct } from './FavoriteProduct';
+import { ProductRating } from './ProductRating';
 
 const { INTEGER, STRING, DECIMAL, TINYINT } = dataTypes;
 
@@ -34,9 +35,6 @@ export const initProduct = async (sequelize) => {
       sizes: {
         type: STRING(30),
         allowNull: false
-      },
-      stars: {
-        type: TINYINT.UNSIGNED
       },
       image: {
         type: STRING(255),
@@ -80,5 +78,6 @@ export const initProduct = async (sequelize) => {
 
 export const initProductAssociations = async () => {
   Product.belongsTo(Store);
+  Product.belongsToMany(User, { as: 'productRatings', through: ProductRating });
   Product.belongsToMany(User, { through: FavoriteProduct });
 };

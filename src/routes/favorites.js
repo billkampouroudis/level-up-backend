@@ -16,11 +16,11 @@ products.post(
   }
 );
 
-products.get('/', async (req, res) => {
+products.get('/', auth, async (req, res) => {
   res.json(await listFavorites(req, res));
 });
 
-products.delete('/:productId', async (req, res) => {
+products.delete('/:productId', auth, async (req, res) => {
   res.json(await removeFavorite(req, res));
 });
 

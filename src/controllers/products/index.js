@@ -15,6 +15,8 @@ import {
 } from './validation';
 import get from '../../utils/misc/get';
 import jwt_decode from 'jwt-decode';
+import findError from '../../utils/misc/errorHandling';
+import { sequelize } from '../../config/sequelize';
 
 export async function createProduct(req, res) {
   try {
@@ -31,27 +33,14 @@ export async function createProduct(req, res) {
 
     return successResponse(STATUS.HTTP_200_OK, product, res);
   } catch (error) {
-    switch (error.name) {
-      case 'SequelizeUniqueConstraintError':
-        return errorResponse(
-          new UnprocessableEntityError(error.errors[0].message),
-          res
-        );
-      case 'ValidationError':
-        return errorResponse(
-          new BadRequestError(error.details[0].message),
-          res
-        );
-      default:
-        return errorResponse(new InternalServerError(), res);
-    }
+    return errorResponse(findError(error), res);
   }
 }
 
 export async function getProduct(req, res) {
   try {
     const { productId } = req.params;
-    const { Product, Store, FavoriteProduct } = models;
+    const { Product, Store, FavoriteProduct, ProductRating } = models;
 
     await getSchema.validateAsync({ productId: parseInt(productId) });
 
@@ -73,12 +62,12 @@ export async function getProduct(req, res) {
       () => jwt_decode(req.headers.authorization).user
     );
 
+    let _product = product.toJSON();
     if (tokenUser) {
       const favorite = await FavoriteProduct.findOne({
         where: { productId, userId: tokenUser.id }
       });
 
-      const _product = product.toJSON();
       if (favorite) {
         _product.isFavorite = true;
         return successResponse(STATUS.HTTP_200_OK, _product, res);
@@ -89,22 +78,13 @@ export async function getProduct(req, res) {
 
     return successResponse(STATUS.HTTP_200_OK, product, res);
   } catch (error) {
-    console.log(error);
-    switch (error.name) {
-      case 'ValidationError':
-        return errorResponse(
-          new BadRequestError(error.details[0].message),
-          res
-        );
-      default:
-        return errorResponse(new InternalServerError(), res);
-    }
+    return errorResponse(findError(error), res);
   }
 }
 
 export async function listProducts(req, res) {
   try {
-    const { Product, Store } = models;
+    const { Product, Store, ProductRating } = models;
 
     let products = await Product.scope('withoutId').findAll({
       include: [
@@ -115,17 +95,34 @@ export async function listProducts(req, res) {
       ]
     });
 
-    return successResponse(STATUS.HTTP_200_OK, products, res);
-  } catch (error) {
-    switch (error.name) {
-      case 'ValidationError':
-        return errorResponse(
-          new BadRequestError(error.details[0].message),
-          res
-        );
-      default:
-        return errorResponse(new InternalServerError(), res);
+    // Add ratings
+    let _products = [];
+    for (let product of products) {
+      const ratingResults = await ProductRating.findAndCountAll({
+        where: { productId: product.id },
+        attributes: ['stars']
+      });
+
+      let sumStars = 0;
+      for (const rating of ratingResults.rows) {
+        sumStars += rating.stars;
+      }
+
+      const stars = Math.round(sumStars / ratingResults.count);
+
+      const ratings = {
+        stars,
+        count: ratingResults.count
+      };
+
+      const _product = product.toJSON();
+      _product.ratings = ratings;
+      _products.push(_product);
     }
+
+    return successResponse(STATUS.HTTP_200_OK, _products, res);
+  } catch (error) {
+    return errorResponse(findError(error), res);
   }
 }
 
@@ -148,15 +145,7 @@ export async function partialUpdateProduct(req, res) {
 
     return successResponse(STATUS.HTTP_200_OK, product, res);
   } catch (error) {
-    switch (error.name) {
-      case 'ValidationError':
-        return errorResponse(
-          new BadRequestError(error.details[0].message),
-          res
-        );
-      default:
-        return errorResponse(new InternalServerError(), res);
-    }
+    return errorResponse(findError(error), res);
   }
 }
 
@@ -174,14 +163,6 @@ export async function removeProduct(req, res) {
 
     return successResponse(STATUS.HTTP_200_OK, {}, res);
   } catch (error) {
-    switch (error.name) {
-      case 'ValidationError':
-        return errorResponse(
-          new BadRequestError(error.details[0].message),
-          res
-        );
-      default:
-        return errorResponse(new InternalServerError(), res);
-    }
+    return errorResponse(findError(error), res);
   }
 }

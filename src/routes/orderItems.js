@@ -18,7 +18,7 @@ orderItems.post(
   }
 );
 
-orderItems.get('/:orderItemId', async (req, res) => {
+orderItems.get('/:orderItemId', auth, async (req, res) => {
   res.json(await getOrderItem(req, res));
 });
 
