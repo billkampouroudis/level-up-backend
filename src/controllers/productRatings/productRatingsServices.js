@@ -1,5 +1,6 @@
 import { models } from '../../models';
 import { createSchema, listSchema } from './validation';
+import { addPagination } from '../../utils/misc/pagination';
 
 export const createProductRatingService = async (data = {}) => {
   const { ProductRating } = models;
@@ -15,7 +16,7 @@ export const createProductRatingService = async (data = {}) => {
   }
 };
 
-export const listProductRatingsService = async (data = {}) => {
+export const listProductRatingsService = async (data = {}, options = {}) => {
   const { ProductRating } = models;
 
   try {
@@ -23,11 +24,13 @@ export const listProductRatingsService = async (data = {}) => {
 
     let filters = { productId: data.productId };
 
-    let products = await ProductRating.findAll({
-      where: filters
+    let results = await ProductRating.findAndCountAll({
+      where: filters,
+      order: [['createdAt', 'DESC']],
+      ...addPagination(options.page, options.pageSize)
     });
 
-    return Promise.resolve(products);
+    return Promise.resolve(results);
   } catch (error) {
     return Promise.reject(error);
   }

@@ -15,7 +15,8 @@ export const initProductRating = async (sequelize) => {
       autoIncrement: true
     },
     text: {
-      type: STRING(500)
+      type: STRING(500),
+      defaultValue: ''
     },
     stars: {
       type: TINYINT.UNSIGNED,

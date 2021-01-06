@@ -1,8 +1,9 @@
 import STATUS from '../constants/statusCodes';
 
-export const successResponse = (status, data, res) => {
+export const successResponse = (status, data, res, pagination = {}) => {
   res.statusCode = status || STATUS.HTTP_200_OK;
   return {
+    ...pagination,
     data: data || {}
   };
 };

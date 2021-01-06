@@ -6,6 +6,7 @@ import {
   createProductRatingService,
   listProductRatingsService
 } from './productRatingsServices';
+import { paginationValues } from '../../utils/misc/pagination';
 
 export async function createProductRating(req, res) {
   try {
@@ -29,14 +30,23 @@ export async function createProductRating(req, res) {
 export async function listProductRatings(req, res) {
   try {
     const { productId } = req.body;
+    const { page, pageSize } = req.query;
     const productIdNumber = parseInt(productId);
 
-    const results = await listProductRatingsService({
-      ...req.body,
-      productId: productIdNumber
-    });
+    const results = await listProductRatingsService(
+      {
+        ...req.body,
+        productId: productIdNumber
+      },
+      req.query
+    );
 
-    return successResponse(STATUS.HTTP_200_OK, results, res);
+    return successResponse(
+      STATUS.HTTP_200_OK,
+      results.rows,
+      res,
+      paginationValues(page, pageSize, results.count)
+    );
   } catch (error) {
     return errorResponse(findError(error), res);
   }
