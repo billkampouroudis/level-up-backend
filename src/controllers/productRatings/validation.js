@@ -8,6 +8,9 @@ export const createSchema = Joi.object({
 });
 
 export const listSchema = Joi.object({
-  productId: Joi.number().required(),
+  productId: Joi.alternatives().try(
+    Joi.array().items(Joi.number()),
+    Joi.number().required()
+  ),
   userId: Joi.number()
 });

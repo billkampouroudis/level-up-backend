@@ -1,8 +1,8 @@
 import { models } from '../../models';
 import { createSchema, listSchema } from './validation';
 import { addPagination } from '../../utils/misc/pagination';
-import { op } from '../../config/sequelize';
 import { ForbiddenError } from '../../constants/errors';
+import is from '../../utils/misc/is';
 
 export const createProductRatingService = async (data = {}) => {
   const { ProductRating, OrderItem, Order } = models;
@@ -17,7 +17,7 @@ export const createProductRatingService = async (data = {}) => {
       include: [
         {
           model: Order,
-          where: { userId: userId, status: { [op.not]: 'in_cart' } }
+          where: { userId: userId, status: 'closed' }
         }
       ]
     });
@@ -37,16 +37,32 @@ export const createProductRatingService = async (data = {}) => {
   }
 };
 
-export const listProductRatingsService = async (data = {}, options = {}) => {
+export const listProductRatingsService = async (options = {}) => {
   const { ProductRating } = models;
-
+  const { filters } = options;
   try {
-    await listSchema.validateAsync(data);
+    await listSchema.validateAsync(filters);
 
-    let filters = { productId: data.productId };
+    let productRatingsFilters = { productId: filters.productId };
+
+    // Filter by product id
+    if (is.array(filters.productId) && filters.productId.length > 0) {
+      productRatingsFilters = {
+        ...productRatingsFilters,
+        productId: filters.productId
+      };
+    }
+
+    // Filter by user id
+    if (filters.userId) {
+      productRatingsFilters = {
+        ...productRatingsFilters,
+        userId: filters.userId
+      };
+    }
 
     let results = await ProductRating.findAndCountAll({
-      where: filters,
+      where: productRatingsFilters,
       order: [['createdAt', 'DESC']],
       ...addPagination(options.page, options.pageSize)
     });
