@@ -23,6 +23,12 @@ const is = {
   },
   number: (value) => {
     return typeof value === 'number' && !isNaN(value);
+  },
+  array: (item) => {
+    return Array.isArray(item);
+  },
+  object: (item) => {
+    return typeof item === 'object' && item !== null;
   }
 };
 
