@@ -20,7 +20,7 @@ import { calculateCosts } from '../../utils/orders/orders';
 import { calculateUserLevel, giveXpFromOrder } from '../../utils/levels/levels';
 import { User } from '../../models/User';
 import moment from 'moment';
-
+import { ProductRating } from '../../models/ProductRating';
 export async function createOrder(req, res) {
   try {
     const { storeId } = req.body;
@@ -152,7 +152,31 @@ export async function listOrders(req, res) {
       return successResponse(STATUS.HTTP_200_OK, [], res);
     }
 
-    return successResponse(STATUS.HTTP_200_OK, orders, res);
+    // Check if user can rate the products of the given order
+    let _orders = [];
+    for (let order of orders) {
+      const _order = order.toJSON();
+      for (let [index, orderItem] of order.orderItems.entries()) {
+        if (!orderItem.product) {
+          continue;
+        }
+
+        const rating = await ProductRating.findOne({
+          where: { productId: orderItem.product.id, userId: tokenUser.id }
+        });
+
+        let canRate = false;
+        if (!rating && _order.status === 'closed') {
+          canRate = true;
+        }
+
+        _order.orderItems[index] = orderItem.toJSON();
+        _order.orderItems[index].product.canRate = canRate;
+      }
+      _orders.push(_order);
+    }
+
+    return successResponse(STATUS.HTTP_200_OK, _orders, res);
   } catch (error) {
     switch (error.name) {
       case 'ValidationError':
