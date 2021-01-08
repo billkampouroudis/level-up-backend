@@ -150,9 +150,9 @@ export async function removeStore(req, res) {
 export async function listProducts(req, res) {
   try {
     const { storeId } = req.params;
-    const { Product, Store } = models;
+    const { Product, Store, ProductRating } = models;
 
-    let stores = await Product.scope('withoutId').findAll({
+    let products = await Product.scope('withoutId').findAll({
       include: [
         {
           model: Store,
@@ -162,7 +162,32 @@ export async function listProducts(req, res) {
       where: { storeId }
     });
 
-    return successResponse(STATUS.HTTP_200_OK, stores, res);
+    // Add ratings
+    let _products = [];
+    for (let product of products) {
+      const ratingResults = await ProductRating.findAndCountAll({
+        where: { productId: product.id },
+        attributes: ['stars']
+      });
+
+      let sumStars = 0;
+      for (const rating of ratingResults.rows) {
+        sumStars += rating.stars;
+      }
+
+      const stars = Math.round(sumStars / ratingResults.count);
+
+      const ratings = {
+        stars,
+        count: ratingResults.count
+      };
+
+      const _product = product.toJSON();
+      _product.ratings = ratings;
+      _products.push(_product);
+    }
+
+    return successResponse(STATUS.HTTP_200_OK, _products, res);
   } catch (error) {
     switch (error.name) {
       case 'ValidationError':
