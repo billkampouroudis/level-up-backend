@@ -8,9 +8,10 @@ export const createSchema = Joi.object({
 });
 
 export const listSchema = Joi.object({
-  productId: Joi.alternatives().try(
-    Joi.array().items(Joi.number()),
-    Joi.number().required()
-  ),
-  userId: Joi.number()
+  productId: Joi.alternatives()
+    .try(Joi.array().min(1).items(Joi.number()), Joi.number())
+    .required(),
+  userId: Joi.number(),
+  page: Joi.number(),
+  pageSize: Joi.number()
 });

@@ -45,6 +45,7 @@ export const paginationValues = (page, pageSize, totalResults) => {
     page,
     nextPage,
     prevPage,
-    totalResults
+    totalResults,
+    totalPages
   };
 };

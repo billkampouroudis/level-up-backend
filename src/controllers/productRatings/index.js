@@ -29,17 +29,8 @@ export async function createProductRating(req, res) {
 
 export async function listProductRatings(req, res) {
   try {
-    const { productId } = req.body;
     const { page, pageSize } = req.query;
-    const productIdNumber = parseInt(productId);
-
-    const results = await listProductRatingsService(
-      {
-        ...req.body,
-        productId: productIdNumber
-      },
-      req.query
-    );
+    const results = await listProductRatingsService(req.query);
 
     return successResponse(
       STATUS.HTTP_200_OK,

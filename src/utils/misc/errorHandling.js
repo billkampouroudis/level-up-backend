@@ -11,6 +11,8 @@ const findError = (error = {}) => {
       return new UnprocessableEntityError(
         get.safe(() => error.errors[0].message, '')
       );
+    case 'SequelizeValidationError':
+      return new BadRequestError(get.safe(() => error.details[0].message, ''));
     case 'ValidationError':
       return new BadRequestError(get.safe(() => error.details[0].message, ''));
     case 'BadRequestError':
