@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { sequelize, loadDb } from './sequelize';
 import initModels, { models } from '../models/index';
 import fs from 'fs';

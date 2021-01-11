@@ -17,6 +17,14 @@ export const initAddress = async (sequelize) => {
         primaryKey: true,
         autoIncrement: true
       },
+      firstName: {
+        type: STRING(45),
+        allowNull: false
+      },
+      lastName: {
+        type: STRING(45),
+        allowNull: false
+      },
       street: {
         type: STRING(100),
         allowNull: false
