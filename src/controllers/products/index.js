@@ -86,7 +86,8 @@ export async function listProducts(req, res) {
           model: Store,
           as: 'store'
         }
-      ]
+      ],
+      order: [['id', 'DESC']]
     });
 
     // Add ratings

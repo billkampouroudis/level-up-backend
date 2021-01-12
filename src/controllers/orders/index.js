@@ -17,7 +17,8 @@ import {
 import jwt_decode from 'jwt-decode';
 import { fullOrderSerializer } from './serializers';
 import { calculateCosts } from '../../utils/orders/orders';
-import { calculateUserLevel, giveXpFromOrder } from '../../utils/levels/levels';
+import { calculateUserLevel } from '../../utils/levels/levels';
+import { giveXpFromOrder } from '../../utils/points/points';
 import { User } from '../../models/User';
 import moment from 'moment';
 import { ProductRating } from '../../models/ProductRating';

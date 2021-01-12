@@ -7,9 +7,12 @@ import {
   listProductRatingsService
 } from './productRatingsServices';
 import { paginationValues } from '../../utils/misc/pagination';
+import { models } from '../../models';
+import { giveXpFromRating } from '../../utils/points/points';
 
 export async function createProductRating(req, res) {
   try {
+    const { User } = models;
     const { productId } = req.body;
     const productIdNumber = parseInt(productId);
 
@@ -20,6 +23,16 @@ export async function createProductRating(req, res) {
       productId: productIdNumber,
       userId: tokenUser.id
     });
+
+    let user = await User.findOne({
+      where: { id: tokenUser.id },
+      attributes: {
+        exclude: ['password']
+      }
+    });
+
+    user.xp += giveXpFromRating();
+    await user.save();
 
     return successResponse(STATUS.HTTP_200_OK, result, res);
   } catch (error) {

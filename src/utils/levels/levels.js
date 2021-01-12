@@ -3,7 +3,7 @@ import is from '../misc/is';
 export const levels = (level) => {
   const _levels = [
     { key: 0, minXp: 0 }, // not in use
-    { key: 1, minXp: 200, discount: 0.02 },
+    { key: 1, minXp: 50, discount: 0.02 },
     { key: 2, minXp: 500, discount: 0.04 },
     { key: 3, minXp: 1000, discount: 0.05 },
     { key: 4, minXp: 1500, discount: 0.1 },
@@ -24,11 +24,6 @@ export const levels = (level) => {
   }
 
   return _levels[level];
-};
-
-export const giveXpFromOrder = (cost = 0) => {
-  cost = Number(cost);
-  return Math.round(cost * 10);
 };
 
 export const calculateUserLevel = (xp = 0) => {

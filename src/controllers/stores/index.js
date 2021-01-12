@@ -159,7 +159,9 @@ export async function listProducts(req, res) {
           as: 'store'
         }
       ],
-      where: { storeId }
+      where: { storeId },
+      limit: 5,
+      order: [['id', 'DESC']]
     });
 
     // Add ratings
