@@ -2,7 +2,6 @@ import STATUS from '../../constants/statusCodes';
 import { successResponse, errorResponse } from '../../utils/response';
 import {
   BadRequestError,
-  UnprocessableEntityError,
   NotFoundError,
   InternalServerError,
   ForbiddenError
@@ -16,6 +15,7 @@ import {
 } from './validation';
 import { authSerializer } from './serializers';
 import jwt_decode from 'jwt-decode';
+import findError from '../../utils/misc/errorHandling';
 
 export async function createUser(req, res) {
   try {
@@ -30,20 +30,7 @@ export async function createUser(req, res) {
 
     return successResponse(STATUS.HTTP_200_OK, user, res);
   } catch (error) {
-    switch (error.name) {
-      case 'SequelizeUniqueConstraintError':
-        return errorResponse(
-          new UnprocessableEntityError(error.errors[0].message),
-          res
-        );
-      case 'ValidationError':
-        return errorResponse(
-          new BadRequestError(error.details[0].message),
-          res
-        );
-      default:
-        return errorResponse(new InternalServerError(), res);
-    }
+    return errorResponse(findError(error), res);
   }
 }
 

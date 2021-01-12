@@ -10,6 +10,7 @@ export const successResponse = (status, data, res, pagination = {}) => {
 
 export const errorResponse = (error, res) => {
   res.statusCode = error.status || STATUS.HTTP_500_INTERNAL_SERVER_ERROR;
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
   return {
     error: error || {}
   };

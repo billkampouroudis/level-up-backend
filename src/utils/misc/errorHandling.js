@@ -12,7 +12,6 @@ const findError = (error = {}) => {
         get.safe(() => error.errors[0].message, '')
       );
     case 'SequelizeValidationError':
-      return new BadRequestError(get.safe(() => error.details[0].message, ''));
     case 'ValidationError':
       return new BadRequestError(get.safe(() => error.details[0].message, ''));
     case 'BadRequestError':
@@ -21,6 +20,7 @@ const findError = (error = {}) => {
     case 'ConflictError':
     case 'ForbiddenError':
     case 'InternalServerError':
+    case 'UnprocessableEntityError':
       return error;
     default:
       return new InternalServerError(error.message);

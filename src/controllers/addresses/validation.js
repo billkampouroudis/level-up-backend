@@ -1,6 +1,8 @@
 import Joi from 'joi';
 
 export const createSchema = Joi.object({
+  firstName: Joi.string().trim().required(),
+  lastName: Joi.string().trim().required(),
   street: Joi.string().trim().required(),
   number: Joi.number().required(),
   zipCode: Joi.string().trim().required(),
@@ -16,6 +18,8 @@ export const getSchema = Joi.object({
 });
 
 export const partialUpdateSchema = Joi.object({
+  firstName: Joi.string().trim(),
+  lastName: Joi.string().trim(),
   street: Joi.string().trim(),
   number: Joi.number(),
   zipCode: Joi.string().trim(),

@@ -1,15 +1,12 @@
 import STATUS from '../../constants/statusCodes';
 import { successResponse, errorResponse } from '../../utils/response';
-import {
-  BadRequestError,
-  UnprocessableEntityError,
-  UnauthorizedError
-} from '../../constants/errors';
+import { BadRequestError, UnauthorizedError } from '../../constants/errors';
 import { models } from '../../models';
 import { sign } from 'jsonwebtoken';
 import { createUser } from '../users';
 import { authSerializer } from '../users/serializers';
 import is from '../../utils/misc/is';
+import findError from '../../utils/misc/errorHandling';
 
 export async function login(req, res) {
   try {
@@ -44,14 +41,7 @@ export async function login(req, res) {
 
     return successResponse(STATUS.HTTP_200_OK, { token }, res);
   } catch (error) {
-    switch (error.name) {
-      case 'SequelizeUniqueConstraintError':
-        return errorResponse(new UnprocessableEntityError(), res);
-      case 'Unauthorized':
-        return errorResponse(new UnauthorizedError(), res);
-      default:
-        return errorResponse(error, res);
-    }
+    return errorResponse(findError(error), res);
   }
 }
 
@@ -60,11 +50,11 @@ export async function register(req, res) {
     const createUserResponse = await createUser(req, res);
 
     if (createUserResponse.error) {
-      return errorResponse(createUserResponse.error, res);
+      return errorResponse(findError(createUserResponse.error), res);
     }
 
     return await login(req, res);
   } catch (error) {
-    return errorResponse(error, res);
+    return errorResponse(findError(error), res);
   }
 }
