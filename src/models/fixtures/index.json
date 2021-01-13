@@ -3,8 +3,8 @@
     "model": "User",
     "data": {
       "id": 1,
-      "firstName": "Bill",
-      "lastName": "Kampouroudis",
+      "firstName": "Βασίλης",
+      "lastName": "Καμπουρούδης",
       "email": "v.kampouroudis@gmail.com",
       "password": "123456789"
     }
@@ -14,9 +14,9 @@
     "model": "Store",
     "data": {
       "id": 1,
-      "brandName": "My Amazing Store",
-      "contactPhone": "6945901783",
-      "contactEmail": "my-amazing-store@test.test",
+      "brandName": "Intersport",
+      "contactPhone": "2551023530",
+      "contactEmail": "intersport@fixture.test",
       "users": [
         {
           "id": 1,
@@ -31,9 +31,9 @@
     "model": "Store",
     "data": {
       "id": 2,
-      "brandName": "My Other Amazing Store",
-      "contactPhone": "2551033464",
-      "contactEmail": "my-other-amazing-store@test.test",
+      "brandName": "Skateshop",
+      "contactPhone": "2118005110",
+      "contactEmail": "skateshop@fixture.test",
       "users": [
         {
           "id": 1,
@@ -52,7 +52,7 @@
       "name": "Adidas Trefoil Crew Adicolor CW1235",
       "description": "Το φούτερ Adidas Trefoil Crew Adicolor είναι κατασκευασμένο από απαλό, βαμβακερό ύφασμα για άνεση μέσα στην μέρα. Κύριο γνώρισμά του, το γνωστό λογότυπο Trefoil για ένα ρετρό και αθλητικό στυλ.",
       "originalPrice": "29.99",
-      "discountLevel": 1,
+      "discountLevel": 10,
       "sizes": "S M L",
       "image": "9706520864872527337994324.jpeg",
       "store": 1
@@ -62,12 +62,11 @@
     "model": "Product",
     "data": {
       "id": 2,
-      "name": "Quiksilver Παρκά Αδιάβροχο Ferris Καφέ Με Γούνα στην Κουκούλα",
-      "description": "Παρκά QUIKSILVER σε μουσταρδί χρώμα με γούνινη επένδυση. Κουκούλα με κορδόνι και αποσπώμενο γουνάκι. Τσέπες με καπάκι και κουμπί. Τσέπες σε λοξή γραμμή στο στήθος. Ελαστικό τελείωμα και κουμπάκι στις μανσέτες. Κλείσιμο με φερμουάρ και πατιλέτα με κουμπιά.",
-      "originalPrice": "150",
-      "discountLevel": 3,
-      "sizes": "S M L XL",
-      "image": "8736142086887256733599931.jpeg",
+      "name": "Adidas Cropped Hoodie",
+      "description": "H cropped γραμμή χαρίζει μοντέρνο look σε αυτό το φούτερ με τις εμβληματικές λεπτομέρειες της Adidas!",
+      "originalPrice": "39.92",
+      "sizes": "XS S M L",
+      "image": "adigc8789_cwhite.jpg",
       "store": 1
     }
   },
@@ -75,11 +74,11 @@
     "model": "Product",
     "data": {
       "id": 3,
-      "name": "Adidas Cropped Hoodie",
-      "description": "H cropped γραμμή χαρίζει μοντέρνο look σε αυτό το φούτερ με τις εμβληματικές λεπτομέρειες της Adidas!",
-      "originalPrice": "39.92",
-      "sizes": "XS S M L",
-      "image": "3706142026587256733799432.jpeg",
+      "name": "Adidas Falcon",
+      "description": "Στυλ που πάει παντού. Χρειάζεσαι παπούτσια για τις δουλειές και τη βόλτα σου; Τα Αdidas Falcon ανταποκρίνονται στις ανάγκες σου με chunky γραμμή και λαχταριστή ροζ απόχρωση.",
+      "originalPrice": "54.37",
+      "sizes": "36 37 38 39 40 41 42",
+      "image": "8706142086587256733799432.jpeg",
       "store": 1
     }
   },
@@ -87,11 +86,75 @@
     "model": "Product",
     "data": {
       "id": 4,
-      "name": "Adidas Falcon",
+      "name": "NIKE Ανδρικά Παπούτσια Μπάσκετ AIR MAX IMPACT CI1396-600",
+      "description": "Το Nike Air Max Impact χαρίζει εντυπωσιακό, εκφραστικό στυλ με απόλυτα δυναμική εμφάνιση στο γήπεδο. Η αντικραδασμική προστασία Max Air προσφέρει πιο ήπια πρόσκρουση στο έδαφος, το προσαρμόσιμο κλιπ φτέρνας και το σύστημα με δύο λουράκια συνδυάζονται τέλεια για ανάλαφρη, σταθερή αίσθηση.",
+      "originalPrice": "88,99",
+      "discountLevel": 8,
+      "sizes": "40 40.5 41 42 42.5 44 44.5 46 47 47.5 48.5 49.5",
+      "image": "Nike_Impact_CI1396-600.png",
+      "store": 1
+    }
+  },
+  {
+    "model": "Product",
+    "data": {
+      "id": 5,
+      "name": "NIKE Γυναικεία Παπούτσια για Τρέξιμο REVOLUTION 5 BQ3207-600",
+      "description": "Το Nike Revolution 5 εξασφαλίζει αντικραδασμική προστασία σε κάθε βήμα από μαλακό αφρό για άνετη εφαρμογή στο τρέξιμο. Το ανάλαφρο πλεκτό υλικό αγκαλιάζει το πέλμα και εξασφαλίζει δροσερή εφαρμογή και στήριξη, ενώ η μινιμαλιστική σχεδίαση ταιριάζει σε κάθε δραστηριότητα της ημέρας σου.",
+      "originalPrice": "54.99",
+      "discountLevel": 6,
+      "sizes": "36 37 37.5 38 39 40 40.5 41 42",
+      "image": "Nike_REVOLUTION_5.png",
+      "store": 1
+    }
+  },
+  {
+    "model": "Product",
+    "data": {
+      "id": 6,
+      "name": "UNDER ARMOUR Κολάν HEATGEAR 7/8 1309628-001",
+      "description": "Γυναικείο κολάν fitness από την UNDER ARMOUR.",
+      "originalPrice": "47,99",
+      "sizes": "XS M L",
+      "image": "Under_Armour_HEATGEAR_7_8.png",
+      "store": 1
+    }
+  },
+  {
+    "model": "Product",
+    "data": {
+      "id": 7,
+      "name": "HORSEFEATHERS MILLIE DRESS TIE DYE",
       "description": "Στυλ που πάει παντού. Χρειάζεσαι παπούτσια για τις δουλειές και τη βόλτα σου; Τα Αdidas Falcon ανταποκρίνονται στις ανάγκες σου με chunky γραμμή και λαχταριστή ροζ απόχρωση.",
-      "originalPrice": "54.37",
+      "originalPrice": "39.99",
+      "discountLevel": 2,
       "sizes": "36 37 38 39 40 41 42",
-      "image": "8706142086587256733799432.jpeg",
+      "image": "SW780C_1-1000x1000.jpg",
+      "store": 2
+    }
+  },
+  {
+    "model": "Product",
+    "data": {
+      "id": 8,
+      "name": "Quiksilver Παρκά Αδιάβροχο Ferris Καφέ Με Γούνα στην Κουκούλα",
+      "description": "Παρκά QUIKSILVER σε μουσταρδί χρώμα με γούνινη επένδυση. Κουκούλα με κορδόνι και αποσπώμενο γουνάκι. Τσέπες με καπάκι και κουμπί. Τσέπες σε λοξή γραμμή στο στήθος. Ελαστικό τελείωμα και κουμπάκι στις μανσέτες. Κλείσιμο με φερμουάρ και πατιλέτα με κουμπιά.",
+      "originalPrice": "150",
+      "discountLevel": 3,
+      "sizes": "S M L XL",
+      "image": "8736142086887256733599931.jpeg",
+      "store": 2
+    }
+  },
+  {
+    "model": "Product",
+    "data": {
+      "id": 9,
+      "name": "HUF X KILL BILL VERSUS TEE YELLOW",
+      "description": "Limited-edition HUF x Kill Bill Collaboration. 100% βαμβακερό μπλουζάκι. HUF x Kill Bill artwork τυπωμένο στο μπροστινό και στο πίσω μέρος. Woven label HUF x Kill Bill στο λαιμό",
+      "originalPrice": "44.99",
+      "sizes": "M L XL",
+      "image": "78126520639640466216.jpg",
       "store": 2
     }
   }
