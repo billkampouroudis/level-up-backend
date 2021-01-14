@@ -8,13 +8,9 @@ import auth from '../middlewares/auth';
 const productRatings = Router();
 
 // Create
-productRatings.post(
-  '/',
-  (req, res, next) => auth(req, res, next, ['admin']),
-  async (req, res) => {
-    res.json(await createProductRating(req, res));
-  }
-);
+productRatings.post('/', auth, async (req, res) => {
+  res.json(await createProductRating(req, res));
+});
 
 // List
 productRatings.get('/', async (req, res) => {

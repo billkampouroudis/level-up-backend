@@ -10,13 +10,9 @@ import auth from '../middlewares/auth';
 
 const orderItems = Router();
 
-orderItems.post(
-  '/',
-  (req, res, next) => auth(req, res, next, ['admin']),
-  async (req, res) => {
-    res.json(await createOrderItem(req, res));
-  }
-);
+orderItems.post('/', auth, async (req, res) => {
+  res.json(await createOrderItem(req, res));
+});
 
 orderItems.get('/:orderItemId', auth, async (req, res) => {
   res.json(await getOrderItem(req, res));
