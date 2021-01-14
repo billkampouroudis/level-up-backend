@@ -12,25 +12,6 @@ import get from '../../utils/misc/get';
 import jwt_decode from 'jwt-decode';
 import findError from '../../utils/misc/errorHandling';
 
-export async function createProduct(req, res) {
-  try {
-    await createSchema.validateAsync({ ...req.body, image: req.file });
-
-    const { Product } = models;
-
-    const storeId = 1; //TODO: take it from the jwt?
-    const product = await Product.create({
-      ...req.body,
-      image: req.file,
-      storeId
-    });
-
-    return successResponse(STATUS.HTTP_200_OK, product, res);
-  } catch (error) {
-    return errorResponse(findError(error), res);
-  }
-}
-
 export async function getProduct(req, res) {
   try {
     const { productId } = req.params;
@@ -116,47 +97,6 @@ export async function listProducts(req, res) {
     }
 
     return successResponse(STATUS.HTTP_200_OK, _products, res);
-  } catch (error) {
-    return errorResponse(findError(error), res);
-  }
-}
-
-export async function partialUpdateProduct(req, res) {
-  try {
-    const { Product } = models;
-    const { productId } = req.params;
-
-    // TODO: Update only if the user is admin of this product's store
-    await partialUpdateSchema.validateAsync({ ...req.body, productId });
-
-    let product = await Product.update(
-      { ...req.body },
-      {
-        where: {
-          id: productId
-        }
-      }
-    );
-
-    return successResponse(STATUS.HTTP_200_OK, product, res);
-  } catch (error) {
-    return errorResponse(findError(error), res);
-  }
-}
-
-export async function removeProduct(req, res) {
-  try {
-    const { productId } = req.params;
-    const { Product } = models;
-
-    await deleteSchema.validateAsync(productId);
-
-    // TODO: Remove only if the user is admin of this product's store
-    Product.destroy({
-      where: { id: productId }
-    });
-
-    return successResponse(STATUS.HTTP_200_OK, {}, res);
   } catch (error) {
     return errorResponse(findError(error), res);
   }

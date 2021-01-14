@@ -3,8 +3,6 @@ import {
   createStore,
   getStore,
   listStores,
-  partialUpdateStore,
-  removeStore,
   listProducts
 } from '../controllers/stores';
 import auth from '../middlewares/auth';
@@ -30,21 +28,5 @@ stores.get('/', async (req, res) => {
 stores.get('/:storeId/products', async (req, res) => {
   res.json(await listProducts(req, res));
 });
-
-stores.patch(
-  '/:storeId',
-  (req, res, next) => auth(req, res, next, ['admin']),
-  async (req, res) => {
-    res.json(await partialUpdateStore(req, res));
-  }
-);
-
-stores.delete(
-  '/:storeId',
-  (req, res, next) => auth(req, res, next, ['admin']),
-  async (req, res) => {
-    res.json(await removeStore(req, res));
-  }
-);
 
 export default stores;

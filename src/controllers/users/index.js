@@ -86,34 +86,6 @@ export async function listUsers(req, res) {
   }
 }
 
-export async function partialUpdateUser() {
-  // try {
-  //   const { Product } = models;
-  //   const { productId } = req.params;
-  //   // TODO: Update only if the user is admin of this product's store
-  //   await partialUpdateSchema.validateAsync({ ...req.body, productId });
-  //   let product = await Product.update(
-  //     { ...req.body },
-  //     {
-  //       where: {
-  //         id: productId
-  //       }
-  //     }
-  //   );
-  //   return successResponse(STATUS.HTTP_200_OK, product, res);
-  // } catch (error) {
-  //   switch (error.name) {
-  //     case 'ValidationError':
-  //       return errorResponse(
-  //         new BadRequestError(error.details[0].message),
-  //         res
-  //       );
-  //     default:
-  //       return errorResponse(error, res);
-  //   }
-  // }
-}
-
 export async function removeUser(req, res) {
   try {
     const { userId } = req.params;

@@ -90,63 +90,6 @@ export async function listStores(req, res) {
   }
 }
 
-export async function partialUpdateStore(req, res) {
-  try {
-    const { Store } = models;
-    const { storeId } = req.params;
-
-    // TODO: Update only if the user is admin of this store
-    await partialUpdateSchema.validateAsync({ ...req.body, storeId });
-
-    let store = await Store.update(
-      { ...req.body },
-      {
-        where: {
-          id: storeId
-        }
-      }
-    );
-
-    return successResponse(STATUS.HTTP_200_OK, store, res);
-  } catch (error) {
-    switch (error.name) {
-      case 'ValidationError':
-        return errorResponse(
-          new BadRequestError(error.details[0].message),
-          res
-        );
-      default:
-        return errorResponse(error, res);
-    }
-  }
-}
-
-export async function removeStore(req, res) {
-  try {
-    const { storeId } = req.params;
-    const { Store } = models;
-
-    await deleteSchema.validateAsync(storeId);
-
-    // TODO: Remove only if the user is admin of this store
-    Store.destroy({
-      where: { id: storeId }
-    });
-
-    return successResponse(STATUS.HTTP_200_OK, {}, res);
-  } catch (error) {
-    switch (error.name) {
-      case 'ValidationError':
-        return errorResponse(
-          new BadRequestError(error.details[0].message),
-          res
-        );
-      default:
-        return errorResponse(error, res);
-    }
-  }
-}
-
 export async function listProducts(req, res) {
   try {
     const { storeId } = req.params;

@@ -339,7 +339,6 @@ export async function removeOrder(req, res) {
 
     await deleteSchema.validateAsync(storeId);
 
-    // TODO: Remove only if the user is admin of this store
     Store.destroy({
       where: { id: storeId }
     });
