@@ -1,11 +1,6 @@
 import STATUS from '../../constants/statusCodes';
 import { successResponse, errorResponse } from '../../utils/response';
-import {
-  BadRequestError,
-  UnprocessableEntityError,
-  NotFoundError,
-  InternalServerError
-} from '../../constants/errors';
+import { BadRequestError, NotFoundError } from '../../constants/errors';
 import { models } from '../../models';
 import {
   createSchema,
@@ -22,6 +17,8 @@ import { giveXpFromOrder } from '../../utils/points/points';
 import { User } from '../../models/User';
 import moment from 'moment';
 import { ProductRating } from '../../models/ProductRating';
+import findError from '../../utils/misc/errorHandling';
+
 export async function createOrder(req, res) {
   try {
     const { storeId } = req.body;
@@ -43,20 +40,7 @@ export async function createOrder(req, res) {
 
     return successResponse(STATUS.HTTP_200_OK, order[0], res);
   } catch (error) {
-    switch (error.name) {
-      case 'SequelizeUniqueConstraintError':
-        return errorResponse(
-          new UnprocessableEntityError(error.errors[0].message),
-          res
-        );
-      case 'ValidationError':
-        return errorResponse(
-          new BadRequestError(error.details[0].message),
-          res
-        );
-      default:
-        return errorResponse(new InternalServerError(error.message), res);
-    }
+    return errorResponse(findError(error), res);
   }
 }
 
@@ -102,17 +86,7 @@ export async function getOrder(req, res) {
 
     return successResponse(STATUS.HTTP_200_OK, orderJson, res);
   } catch (error) {
-    switch (error.name) {
-      case 'ValidationError':
-        return errorResponse(
-          new BadRequestError(error.details[0].message),
-          res
-        );
-      case 'NotFoundError':
-        return errorResponse(error, res);
-      default:
-        return errorResponse(new InternalServerError(error.message), res);
-    }
+    return errorResponse(findError(error), res);
   }
 }
 
@@ -179,15 +153,7 @@ export async function listOrders(req, res) {
 
     return successResponse(STATUS.HTTP_200_OK, _orders, res);
   } catch (error) {
-    switch (error.name) {
-      case 'ValidationError':
-        return errorResponse(
-          new BadRequestError(error.details[0].message),
-          res
-        );
-      default:
-        return errorResponse(new InternalServerError(error.message), res);
-    }
+    return errorResponse(findError(error), res);
   }
 }
 
@@ -240,17 +206,7 @@ export async function partialUpdateOrder(req, res) {
 
     return successResponse(STATUS.HTTP_200_OK, order, res);
   } catch (error) {
-    switch (error.name) {
-      case 'ValidationError':
-        return errorResponse(
-          new BadRequestError(error.details[0].message),
-          res
-        );
-      case 'NotFoundError':
-        return errorResponse(error, res);
-      default:
-        return errorResponse(new InternalServerError(error.message), res);
-    }
+    return errorResponse(findError(error), res);
   }
 }
 
@@ -319,17 +275,7 @@ export async function partialUpdateOrders(req, res) {
 
     return successResponse(STATUS.HTTP_200_OK, updatedOrders, res);
   } catch (error) {
-    switch (error.name) {
-      case 'ValidationError':
-        return errorResponse(
-          new BadRequestError(error.details[0].message),
-          res
-        );
-      case ('NotFoundError', 'BadRequestError'):
-        return errorResponse(error, res);
-      default:
-        return errorResponse(new InternalServerError(error.message), res);
-    }
+    return errorResponse(findError(error), res);
   }
 }
 export async function removeOrder(req, res) {
@@ -345,14 +291,6 @@ export async function removeOrder(req, res) {
 
     return successResponse(STATUS.HTTP_200_OK, {}, res);
   } catch (error) {
-    switch (error.name) {
-      case 'ValidationError':
-        return errorResponse(
-          new BadRequestError(error.details[0].message),
-          res
-        );
-      default:
-        return errorResponse(error, res);
-    }
+    return errorResponse(findError(error), res);
   }
 }

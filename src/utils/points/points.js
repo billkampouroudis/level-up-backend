@@ -4,5 +4,5 @@ export const giveXpFromOrder = (cost = 0) => {
 };
 
 export const giveXpFromRating = () => {
-  return 200;
+  return 30;
 };

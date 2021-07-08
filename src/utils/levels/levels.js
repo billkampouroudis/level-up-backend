@@ -4,15 +4,15 @@ export const levels = (level) => {
   const _levels = [
     { key: 0, minXp: 0 }, // not in use
     { key: 1, minXp: 50, discount: 0.02 },
-    { key: 2, minXp: 500, discount: 0.04 },
-    { key: 3, minXp: 1000, discount: 0.05 },
-    { key: 4, minXp: 1500, discount: 0.1 },
-    { key: 5, minXp: 2500, discount: 0.15 },
-    { key: 6, minXp: 4000, discount: 0.2 },
-    { key: 7, minXp: 6000, discount: 0.25 },
-    { key: 8, minXp: 8000, discount: 0.3 },
-    { key: 9, minXp: 12000, discount: 0.5 },
-    { key: 10, minXp: 20000, discount: 0.6 }
+    { key: 2, minXp: 500, discount: 0.03 },
+    { key: 3, minXp: 1000, discount: 0.04 },
+    { key: 4, minXp: 1500, discount: 0.05 },
+    { key: 5, minXp: 2500, discount: 0.1 },
+    { key: 6, minXp: 4500, discount: 0.15 },
+    { key: 7, minXp: 7000, discount: 0.2 },
+    { key: 8, minXp: 12000, discount: 0.25 },
+    { key: 9, minXp: 25000, discount: 0.3 },
+    { key: 10, minXp: 40000, discount: 0.5 }
   ];
 
   if (level < 0) {
